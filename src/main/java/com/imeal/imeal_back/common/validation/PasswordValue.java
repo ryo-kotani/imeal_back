@@ -16,7 +16,7 @@ import jakarta.validation.Payload;
 public @interface PasswordValue {
   
   // デフォルトメッセージ
-  String message() default "passwordとpasswordConfirmationが不一致";
+  String message() default "";
 
   // バリデーショングループを付与
   Class<?>[] groups() default {};
