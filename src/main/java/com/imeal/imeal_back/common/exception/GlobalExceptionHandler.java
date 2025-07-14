@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
   }
 
   // その他のエラーはここで処理される（各種コントローラーに記載不要）
-  //bbbb
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public Map<String, Object> handleAllUncaughtException(Exception exception) {
