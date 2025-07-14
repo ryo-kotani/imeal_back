@@ -14,4 +14,8 @@ public interface UserRepository {
 
   @Insert("insert into users (name, email, password) values (#{name}, #{email}, #{password})")
   void insert(User user);
+
+  // ユーザー認証用メソッド
+  @Select("select * from users where email = #{email}")
+  User findByEmail(String email);
 }
