@@ -1,6 +1,7 @@
 create table users (
   id        serial        not null primary key,
-  name      varchar(256)  not null,
+  name      varchar(10)  not null,
   email     varchar(256)  not null unique,
-  password  varchar(256)  not null
+  -- BCryptPasswordEncoderの入力上限: 72Byte, 出力: 約60文字より設定
+  password  varchar(72)  not null
 );
