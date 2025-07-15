@@ -48,8 +48,9 @@ public class SecurityConfig {
           return corsConfiguration;
         }))
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-          // ここに記述したパスへのPOSTメソッドはログインなしで許可
-          .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+          // ここに記述したパスへリクエストはログインなしで許可
+          .requestMatchers(HttpMethod.POST, "/api/user/*").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/user/*").permitAll()
           .anyRequest().authenticated())
         .formLogin(login -> login
           .loginProcessingUrl("/api/login")
