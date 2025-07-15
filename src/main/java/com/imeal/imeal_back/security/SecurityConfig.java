@@ -50,7 +50,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
           // ここに記述したパスへリクエストはログインなしで許可
           .requestMatchers(HttpMethod.POST, "/api/user/*").permitAll()
-          .requestMatchers(HttpMethod.GET, "/api/user/*").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/user/*", "/api/bases/*").permitAll()
           .anyRequest().authenticated())
         .formLogin(login -> login
           .loginProcessingUrl("/api/login")
