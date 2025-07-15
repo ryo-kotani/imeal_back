@@ -16,7 +16,7 @@ import lombok.Setter;
 public class UserCreateRequest {
 
     @NotBlank(message = "{error.name.notblank}", groups = ValidationGroups.First.class)
-    @Length(message = "{error.name.length}", max = 10, groups = ValidationGroups.Second.class)
+    @Length(message = "{error.name.length}", min = 1, max = 10, groups = ValidationGroups.Second.class)
     String name;
 
     @NotBlank(message = "{error.email.notblank}", groups = ValidationGroups.First.class)
@@ -25,10 +25,10 @@ public class UserCreateRequest {
     String email;
 
     @NotBlank(message = "{error.password.notblank}", groups = ValidationGroups.First.class)
-    @Length(message = "{error.password.length}", min = 6, max = 256, groups = ValidationGroups.Second.class)
+    @Length(message = "{error.password.length}", min = 6, max = 72, groups = ValidationGroups.Second.class)
     String password;
 
     @NotBlank(message = "{error.password.notblank}", groups = ValidationGroups.First.class) // passwordと同じキーを再利用
-    @Length(message = "{error.password.length}", min = 6, max = 256, groups = ValidationGroups.Second.class) // passwordと同じキーを再利用
+    @Length(message = "{error.password.length}", min = 6, max = 72, groups = ValidationGroups.Second.class) // passwordと同じキーを再利用
     String passwordConfirmation;
 }
