@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class BaseController {
   private final BaseService baseService;
   
-  @GetMapping("/")
+  @GetMapping()
   public BasesResponse getBases() {
     return baseService.getBases();
   }
