@@ -41,11 +41,6 @@ public class SignUpIntegrationTest {
     request = UserCreateRequestFactory.createValidRequest();
   }
 
-  // @AfterEach
-  // public void cleanUp() {
-  //   userRepository.deleteAll();
-  // }
-
   @Nested
   class ユーザー新規登録ができる場合 {
     @Test
