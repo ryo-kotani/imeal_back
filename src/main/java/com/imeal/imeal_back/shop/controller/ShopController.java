@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imeal.imeal_back.shop.dto.ShopListResponse;
+import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,11 @@ public class ShopController {
     ShopListResponse response = shopService.getShops(baseId);
 
     return ResponseEntity.ok(response);
+  }
+  
+  @GetMapping("/{shopId}/reviews")
+  public ShopResponse getShop(@PathVariable("shopId") Integer shopId) {
+    return shopService.getShop(shopId);
   }
   
 }

@@ -25,22 +25,10 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
   private final UserService userService;
-  private final UserRepository userRepository;
   
   @PostMapping("/")
   @ResponseStatus(HttpStatus.CREATED)
   public UserResponse createUser(@RequestBody @Validated(ValidationGroups.Group.class) UserCreateRequest request) {
     return userService.createUser(request);
   }
-  
-  @GetMapping("/")
-  public UserResponse getMethodName() {
-    UserCreateRequest request = new UserCreateRequest();
-    request.setName("name");
-    request.setEmail("sample@test.com");
-    request.setPassword("a".repeat(72));
-    request.setPasswordConfirmation(request.getPassword());
-    return userService.createUser(request);
-  }
-  
 }
