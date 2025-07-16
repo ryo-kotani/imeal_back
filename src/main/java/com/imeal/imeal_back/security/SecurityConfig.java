@@ -51,7 +51,7 @@ public class SecurityConfig {
           // ここに記述したパスへリクエストはログインなしで許可
           // "/" → ""に変更
           // "users" → "user"に変更
-          .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/users", "/api/shops").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases/**", "api/shops/**").permitAll()
           .anyRequest().authenticated())
         .formLogin(login -> login

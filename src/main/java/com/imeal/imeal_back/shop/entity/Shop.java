@@ -16,7 +16,7 @@ public class Shop {
   String url;
   String name;
   String address;
-  String distance;
+  Integer distance;
   Integer minutes;
   Base base;
   Location location;
