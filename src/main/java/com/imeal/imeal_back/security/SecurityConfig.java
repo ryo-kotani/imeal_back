@@ -52,7 +52,7 @@ public class SecurityConfig {
           // "/" → ""に変更
           // "users" → "user"に変更
           .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-          .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases/**", "api/shops/**").permitAll()
           .anyRequest().authenticated())
         .formLogin(login -> login
           .loginProcessingUrl("/api/login")
