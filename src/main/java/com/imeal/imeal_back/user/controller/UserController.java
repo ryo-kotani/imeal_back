@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
+// "users" → "user"に変更
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
@@ -27,13 +28,14 @@ public class UserController {
   private final UserService userService;
   private final UserRepository userRepository;
   
+  // "/" → ""に変更
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)
   public UserResponse createUser(@RequestBody @Validated(ValidationGroups.Group.class) UserCreateRequest request) {
-    System.out.println("呼ばれた：createUser");
     return userService.createUser(request);
   }
   
+  // "/" → ""に変更
   @GetMapping()
   public UserResponse getMethodName() {
     UserCreateRequest request = new UserCreateRequest();

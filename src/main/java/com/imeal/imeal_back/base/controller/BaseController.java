@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
+// "/" → ""に変更
 @RequestMapping("/api/bases")
 @RequiredArgsConstructor
 public class BaseController {

@@ -49,6 +49,8 @@ public class SecurityConfig {
         }))
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
           // ここに記述したパスへリクエストはログインなしで許可
+          // "/" → ""に変更
+          // "users" → "user"に変更
           .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases").permitAll()
           .anyRequest().authenticated())
