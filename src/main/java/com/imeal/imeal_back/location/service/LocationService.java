@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LocationService {
   private final LocationRepository locationRepository;
-  
+
   public Location createLocation(LocationCreateRequest request) {
     Location location = new Location();
     location.setLat(request.getLat());

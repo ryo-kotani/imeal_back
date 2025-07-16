@@ -1,14 +1,13 @@
 package com.imeal.imeal_back.location.dto;
 
-import lombok.Data;
+import java.math.BigDecimal;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class LocationCreateRequest {
-  private Integer lat;
-  private Integer lon;
-
-  public LocationCreateRequest(Integer lat, Integer lon) {
-    this.lat = lat;
-    this.lon = lon;
-  }
+  private BigDecimal lat;
+  private BigDecimal lon;
 }

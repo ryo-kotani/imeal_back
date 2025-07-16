@@ -11,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Review {
-  Integer id;
-  String imgPath;
-  String comment;
-  Integer amount;
-  Integer evaluation;
-  Timestamp createdAt;
-  Shop shop;
-  User user;
+  private Integer id;
+  private String imgPath;
+  private String comment;
+  private Integer amount;
+  private Integer evaluation;
+  private Timestamp createdAt;
+  private Shop shop;
+  private User user;
 }

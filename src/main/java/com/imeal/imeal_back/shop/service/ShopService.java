@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ShopService {
   private final ShopRepository shopRepository;
   private final LocationService locationService;
+  private final ShopMapper shopMapper;
 
   public ShopListResponse getShops(Integer baseId) {
     List<Shop> shops = shopRepository.findByX(baseId);
@@ -29,9 +30,12 @@ public class ShopService {
   
   public ShopResponse createShop(ShopCreateRequest request) {
     Base base = new Base();
-    base.setId(request.getBaseid());
+    base.setId(request.getBaseId());
 
-    Location persistedLocation = locationService.createLocation(new LocationCreateRequest(request.getLocationLat(), request.getLocationLon()));
+    LocationCreateRequest locationCreateRequest = new LocationCreateRequest();
+    locationCreateRequest.setLat(request.getLocationLat());
+    locationCreateRequest.setLon(request.getLocationLon());
+    Location persistedLocation = locationService.createLocation(locationCreateRequest);
     
     Shop shop = new Shop();
     shop.setName(request.getName());
@@ -39,11 +43,19 @@ public class ShopService {
     shop.setAddress(request.getAddress());
     shop.setDistance(request.getDistance());
     shop.setMinutes(request.getMinutes());
+    System.out.println(base.getId());
+    System.out.println(persistedLocation.getId());
     shop.setBase(base);
     shop.setLocation(persistedLocation);
 
     shopRepository.insert(shop);
-    ShopResponse response = new ShopResponse(shop);
+    ShopResponse response = new ShopResponse();
+    response.setShop(shop);
     return response;
+  }
+
+  public ShopResponse getShop(Integer id) {
+    Shop shop = shopRepository.findById(id);
+    return shopMapper.toResponse(shop);
   }
 }
