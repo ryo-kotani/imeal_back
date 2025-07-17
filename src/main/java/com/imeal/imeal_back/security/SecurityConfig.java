@@ -96,7 +96,7 @@ public class SecurityConfig {
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
       response.getWriter().write(objectMapper.writeValueAsString((
-        Map.of("errorMessages", List.of("ログインに失敗しました"))
+        Map.of("messages", List.of("ログインに失敗しました"))
       )));
     };
   }
@@ -109,7 +109,7 @@ public class SecurityConfig {
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
       response.getWriter().write(objectMapper.writeValueAsString(
-        Map.of("successMessages", List.of("ログアウトに成功しました"))
+        Map.of("messages", List.of("ログアウトに成功しました"))
       ));
     };
   }
