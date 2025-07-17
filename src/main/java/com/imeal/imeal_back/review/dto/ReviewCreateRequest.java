@@ -18,9 +18,9 @@ import lombok.Setter;
 @Setter
 public class ReviewCreateRequest {
 
-  @NotBlank(message = "{error.img.notblank}", groups = ValidationGroups.First.class)
-  @Length(max = 256, message = "{error.img.length}", groups = ValidationGroups.Second.class)
-  String img;
+  @NotBlank(message = "{error.imgPath.notblank}", groups = ValidationGroups.First.class)
+  @Length(max = 256, message = "{error.imgPath.length}", groups = ValidationGroups.Second.class)
+  String imgPath;
 
   @NotBlank(message = "{error.comment.notblank}", groups = ValidationGroups.First.class)
   @Length(max = 256, message = "{error.comment.length}", groups = ValidationGroups.Second.class)
