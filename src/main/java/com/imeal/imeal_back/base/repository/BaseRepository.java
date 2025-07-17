@@ -2,7 +2,9 @@ package com.imeal.imeal_back.base.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -18,4 +20,9 @@ public interface BaseRepository {
     @Result(column="lon", property="location.lon")
   })
   List<Base> findAll();
+
+  // テスト用メソッド
+  @Insert("insert into bases (name, location_id) values (#{name}, #{location.id})")
+  @Options(useGeneratedKeys=true, keyProperty="id")
+  void insert(Base base);
 }
