@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
+import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
 import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.review.repository.ReviewRepository;
@@ -28,5 +29,12 @@ public class ReviewService {
     reviewRepository.insert(review);
     Review createdReview = reviewRepository.findWithShopLocationUserById(review.getId());
     return reviewMapper.toResponse(createdReview);
+  }
+
+  public ReviewShopUserResponse updateReview(Integer reviewId, ReviewUpdateRequest request) {
+    Review review = reviewMapper.toModelFromUpdate(request, reviewId);
+    reviewRepository.insert(review);
+    Review updatedReview = reviewRepository.findWithShopLocationUserById(reviewId);
+    return reviewMapper.toResponse(updatedReview);
   }
 }
