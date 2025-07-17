@@ -22,7 +22,7 @@ public interface BaseRepository {
   List<Base> findAll();
 
   // テスト用メソッド
-  @Insert("insert into bases (name, location_id) values (#{name}, #{locationId})")
+  @Insert("insert into bases (name, location_id) values (#{name}, #{location.id})")
   @Options(useGeneratedKeys=true, keyProperty="id")
-  void insert();
+  void insert(Base base);
 }

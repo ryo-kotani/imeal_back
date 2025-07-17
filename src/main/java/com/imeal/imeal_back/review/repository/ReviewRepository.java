@@ -43,7 +43,7 @@ public interface ReviewRepository {
     @Result(column="shop_address", property="shop.address"),
     @Result(column="shop_distance", property="shop.distance"),
     @Result(column="shop_minutes", property="shop.minutes"),
-    @Result(column="location_id", property="location.id"),
+    @Result(column="location_id", property="shop.location.id"),
     @Result(column="location_lat", property="shop.location.lat"),
     @Result(column="location_lon", property="shop.location.lon"),
     @Result(column="user_id", property="user.id"),

@@ -49,7 +49,7 @@ public class SignUpIntegrationTest {
       long initialUserCount = userRepository.count();
 
       // 2. 実行 (Act) & 3. 検証 (Assert) - レスポンスの検証
-      mockMvc.perform(post("/api/user/")
+      mockMvc.perform(post("/api/users")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated()) // HTTP 201 Created
@@ -72,7 +72,7 @@ public class SignUpIntegrationTest {
       long initialUserCount = userRepository.count(); // 実行前のユーザー数を取得
 
       // 2. 実行 (Act) & 3. 検証 (Assert) - レスポンスの検証
-      mockMvc.perform(post("/api/user/")
+      mockMvc.perform(post("/api/users")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest()); // HTTP 400 Bad Request
