@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
 
 import com.imeal.imeal_back.review.entity.Review;
 
@@ -22,7 +23,9 @@ public interface ReviewRepository {
   @Options(useGeneratedKeys=true, keyProperty="id")
   void insert(Review review);
 
+  @Update("update reviews set img_path = #{imgPath}, comment = #{comment}, amount = #{amount}, evaluation = #{evaluation} where id = #{id}")
   void update(Review review);
+
   void delete(Integer id);
 
   // user情報も一緒に取得する
