@@ -6,10 +6,11 @@ import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.entity.Shop;
+import com.imeal.imeal_back.user.entity.User;
 
 @Component
 public class ReviewMapper {
-  public Review toModel(ReviewCreateRequest request) {
+  public Review toModel(ReviewCreateRequest request, Integer userId) {
     Review review = new Review();
     review.setImgPath(request.getImgPath());
     review.setComment(request.getComment());
@@ -18,6 +19,9 @@ public class ReviewMapper {
     Shop shop = new Shop();
     shop.setId(request.getShopId());
     review.setShop(shop);
+    User user = new User();
+    user.setId(userId);
+    review.setUser(user);
     return review;
   }
 
