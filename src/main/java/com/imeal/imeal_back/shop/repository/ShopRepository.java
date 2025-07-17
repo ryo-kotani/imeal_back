@@ -2,6 +2,7 @@ package com.imeal.imeal_back.shop.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,12 +12,18 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
 
 import com.imeal.imeal_back.shop.entity.Shop;
 
 @Mapper
 public interface ShopRepository {
   @SelectProvider(type = ShopSqlBuilder.class, method = "buildSearchSql")
+  @Results(value={
+    @Result(column = "location_id", property = "location.id"),
+    @Result(column = "lat", property = "location.lat"),
+    @Result(column = "lon", property = "location.lon")
+  })
   List<Shop> findByX(@Param("baseId")Integer baseId);
 
   // Shopに紐づくLocation, Reviews, Reviewに紐づくUserを取得する
@@ -34,6 +41,10 @@ public interface ShopRepository {
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insert(Shop shop);
   
+  @Update("UPDATE shops SET url = #{url}, name = #{name}, address = #{address}, distance = #{distance}, minutes = #{minutes}, location_id = #{location.id} WHERE id = #{id}")
   void update(Shop shop);
-  void delete(Integer id);
+
+  @Delete("DELETE FROM shops WHERE id = #{id}")
+  int delete(Integer id);
+
 }

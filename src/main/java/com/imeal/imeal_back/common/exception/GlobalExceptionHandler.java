@@ -28,4 +28,10 @@ public class GlobalExceptionHandler {
   public Map<String, Object> handleAllUncaughtException(Exception exception) {
     return Map.of("messages", List.of("Internal Server Error"));
   }
+
+  //404エラー
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public Map<String, Object> handleResourceNotFoundException(ResourceNotFoundException exception) {
+    return Map.of("messages", List.of(exception.getMessage()));
+  }
 }
