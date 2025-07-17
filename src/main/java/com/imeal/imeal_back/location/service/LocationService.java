@@ -20,4 +20,9 @@ public class LocationService {
     locationRepository.insert(location);
     return location;
   }
+
+  public Location updateLocation(Location location) {
+    locationRepository.updateLocation(location);
+    return location;
+  }
 }
