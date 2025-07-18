@@ -47,7 +47,8 @@ public class ReviewController {
   }
 
   @PutMapping("/{reviewId}")
-  public ReviewShopUserResponse putReview(@PathVariable("reviewId") Integer reviewId, @RequestBody ReviewUpdateRequest request) {
+  @ResponseStatus(HttpStatus.CREATED)
+  public ReviewShopUserResponse putReview(@PathVariable("reviewId") Integer reviewId, @RequestBody @Validated(ValidationGroups.Group.class) ReviewUpdateRequest request) {
     return reviewService.updateReview(reviewId, request);
   }
 }

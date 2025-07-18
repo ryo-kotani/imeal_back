@@ -33,7 +33,7 @@ public class ReviewService {
 
   public ReviewShopUserResponse updateReview(Integer reviewId, ReviewUpdateRequest request) {
     Review review = reviewMapper.toModelFromUpdate(request, reviewId);
-    reviewRepository.insert(review);
+    reviewRepository.update(review);
     Review updatedReview = reviewRepository.findWithShopLocationUserById(reviewId);
     return reviewMapper.toResponse(updatedReview);
   }
