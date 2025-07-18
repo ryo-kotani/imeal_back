@@ -37,4 +37,8 @@ public class ReviewService {
     Review updatedReview = reviewRepository.findWithShopLocationUserById(reviewId);
     return reviewMapper.toResponse(updatedReview);
   }
+
+  public void deleteReview(Integer reviewId) {
+    reviewRepository.delete(reviewId);
+  }
 }
