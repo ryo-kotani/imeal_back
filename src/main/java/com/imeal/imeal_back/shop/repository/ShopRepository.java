@@ -35,6 +35,9 @@ public interface ShopRepository {
     @Result(column = "lon", property = "location.lon"),
     @Result(column = "id", property = "reviews", many = @Many(select = "com.imeal.imeal_back.review.repository.ReviewRepository.findWithUserByShopId"))
   })
+  Shop findByIdWithReviews(Integer id);
+
+  @Select("SELECT * FROM shops WHERE id = #{id}")
   Shop findById(Integer id);
 
   @Insert("INSERT INTO shops (url, name, address, distance, minutes, base_id, location_id) VALUES(#{url}, #{name}, #{address}, #{distance}, #{minutes}, #{base.id}, #{location.id})")

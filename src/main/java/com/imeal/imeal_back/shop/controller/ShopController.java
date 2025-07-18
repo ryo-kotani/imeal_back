@@ -49,9 +49,15 @@ public class ShopController {
   }
   
   @GetMapping("/{shopId}/reviews")
+  public ShopResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
+    return shopService.getShopWithReviews(shopId);
+  }
+
+  @GetMapping("/{shopId}")
   public ShopResponse getShop(@PathVariable("shopId") Integer shopId) {
     return shopService.getShop(shopId);
   }
+  
   
   @DeleteMapping("/{shopId}")
   public ResponseEntity<Void> deleteShop(@PathVariable("shopId") Integer shopId) {
