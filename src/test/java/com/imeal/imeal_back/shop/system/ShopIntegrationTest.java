@@ -1,15 +1,11 @@
 package com.imeal.imeal_back.shop.system;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.imeal.imeal_back.ImealBackApplication;
-import com.imeal.imeal_back.base.entity.Base;
-import com.imeal.imeal_back.base.repository.BaseRepository; // BaseをDBに保存するために必要
-import com.imeal.imeal_back.location.entity.Location;
-import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
-import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
-import com.imeal.imeal_back.shop.entity.Shop;
-import com.imeal.imeal_back.shop.repository.ShopRepository;
+import java.math.BigDecimal;
+import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals; // BaseをDBに保存するために必要
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,24 +15,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional; // テスト後のDB変更をロールバック
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath; // テスト後のDB変更をロールバック
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.springframework.http.RequestEntity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static com.imeal.imeal_back.location.builder.LocationBuilder.aLocation;
-import static com.imeal.imeal_back.shop.builder.ShopBuilder.aShop;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.imeal.imeal_back.ImealBackApplication;
 import static com.imeal.imeal_back.base.builder.BaseBuilder.aBase;
+import com.imeal.imeal_back.base.entity.Base;
+import com.imeal.imeal_back.base.repository.BaseRepository;
+import static com.imeal.imeal_back.location.builder.LocationBuilder.aLocation;
+import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.repository.LocationRepository;
+import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
+import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
+import com.imeal.imeal_back.shop.entity.Shop;
+import com.imeal.imeal_back.shop.repository.ShopRepository;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ImealBackApplication.class)
