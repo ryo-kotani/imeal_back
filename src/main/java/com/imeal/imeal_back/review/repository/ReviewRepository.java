@@ -2,6 +2,7 @@ package com.imeal.imeal_back.review.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -26,6 +27,11 @@ public interface ReviewRepository {
   @Update("update reviews set img_path = #{imgPath}, comment = #{comment}, amount = #{amount}, evaluation = #{evaluation} where id = #{id}")
   void update(Review review);
 
+  /**
+   * idに紐づくReviewレコードを削除する
+   * @param id 対象ReviewレコードのID
+   */
+  @Delete("delete from reviews where id = #{id}")
   void delete(Integer id);
 
   // user情報も一緒に取得する
