@@ -11,12 +11,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class LocationService {
+
+  private final LocationMapper locationMapper;
   private final LocationRepository locationRepository;
 
   public Location createLocation(LocationCreateRequest request) {
-    Location location = new Location();
-    location.setLat(request.getLat());
-    location.setLon(request.getLon());
+    Location location = locationMapper.toModel(request);
     locationRepository.insert(location);
     return location;
   }

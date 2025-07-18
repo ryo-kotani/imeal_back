@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
 
   //404エラー
   @ExceptionHandler(ResourceNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public Map<String, Object> handleResourceNotFoundException(ResourceNotFoundException exception) {
     return Map.of("messages", List.of(exception.getMessage()));
   }

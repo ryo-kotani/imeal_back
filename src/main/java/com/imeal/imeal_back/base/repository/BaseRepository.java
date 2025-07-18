@@ -25,4 +25,7 @@ public interface BaseRepository {
   @Insert("insert into bases (name, location_id) values (#{name}, #{location.id})")
   @Options(useGeneratedKeys=true, keyProperty="id")
   void insert(Base base);
+
+  @Select("SELECT * FROM bases WHERE id = #{id}")
+  Base findById(Integer id);
 }
