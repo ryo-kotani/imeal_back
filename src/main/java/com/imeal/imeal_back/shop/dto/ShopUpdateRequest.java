@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
+//バリデーション後で直す
 public class ShopUpdateRequest {
 
   @NotBlank(message = "{error.imgPath.notblank}", groups = ValidationGroups.First.class)

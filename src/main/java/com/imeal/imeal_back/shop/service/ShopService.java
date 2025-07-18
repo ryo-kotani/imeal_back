@@ -38,6 +38,11 @@ public class ShopService {
     return shopMapper.toResponse(shop);
   }
 
+  public ShopResponse getShopWithReviews(Integer id) {
+    Shop shop = shopRepository.findByIdWithReviews(id);
+    return shopMapper.toResponse(shop);
+  }
+
   public ShopResponse getShop(Integer id) {
     Shop shop = shopRepository.findById(id);
     return shopMapper.toResponse(shop);
