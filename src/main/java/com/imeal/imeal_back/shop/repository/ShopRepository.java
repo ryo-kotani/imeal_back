@@ -47,4 +47,6 @@ public interface ShopRepository {
   @Delete("DELETE FROM shops WHERE id = #{id}")
   int delete(Integer id);
 
+  @Select("SELECT COUNT(*) FROM shops")
+  long count();
 }
