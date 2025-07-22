@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +27,9 @@ public class TestAuthHelper {
       .param("password", password)
       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
       .with(csrf()))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.name").exists())
+      .andExpect(jsonPath("$.id").exists())
       .andReturn();
     
     return (MockHttpSession) loginResult.getRequest().getSession();

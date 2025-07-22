@@ -2,7 +2,6 @@ package com.imeal.imeal_back.helper.request;
 
 import org.springframework.stereotype.Component;
 
-import com.github.javafaker.Faker;
 import com.imeal.imeal_back.helper.faker.ReviewFaker;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 

@@ -1,7 +1,5 @@
 package com.imeal.imeal_back.review;
 
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,24 +11,20 @@ import org.springframework.mock.web.MockHttpSession;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imeal.imeal_back.ImealBackApplication;
-import com.imeal.imeal_back.base.entity.Base;
-import com.imeal.imeal_back.base.repository.BaseRepository;
+import com.imeal.imeal_back.helper.lib.TestAuthHelper;
 import com.imeal.imeal_back.helper.request.ReviewCreateRequestFactory;
 import com.imeal.imeal_back.helper.request.UserCreateRequestFactory;
-import com.imeal.imeal_back.location.entity.Location;
-import com.imeal.imeal_back.location.repository.LocationRepository;
+import com.imeal.imeal_back.helper.testData.ShopTestDataFactory;
+import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
-import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
-import com.imeal.imeal_back.shop.service.ShopService;
+import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
-import com.imeal.imeal_back.user.service.UserService;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
@@ -44,68 +38,39 @@ public class ReviewCreateIntegrationTest {
   private ObjectMapper objectMapper;
 
   @Autowired
-  private UserService userService;
-  @Autowired
-  private LocationRepository locationRepository;
-  @Autowired
-  private BaseRepository baseRepository;
-  @Autowired
-  private ShopService shopService;
+  private UserCreateRequestFactory userCreateRequestFactory;
 
+  @Autowired
+  private ShopTestDataFactory shopTestDataFactory;
+
+  @Autowired
+  private UserTestDataFactory userTestDataFactory;
+
+  @Autowired
+  private ReviewCreateRequestFactory reviewCreateRequestFactory;
+
+  @Autowired
+  private TestAuthHelper testAuthHelper;
 
   private ReviewCreateRequest request;
-  private UserCreateRequest userRequest;
-  private Location location;
-  private Base base;
-  private ShopCreateRequest shopRequest;
+  private UserCreateRequest userCreateRequest;
   
   @BeforeEach
   public void setUp() {
-    request = ReviewCreateRequestFactory.createValidRequest();
+    userCreateRequest = userCreateRequestFactory.createValidRequest();
+    userTestDataFactory.builder().withEmail(userCreateRequest.getEmail()).withPassword(userCreateRequest.getPassword()).buildAndPersist();
+    
+    Shop shop = shopTestDataFactory.createDefaultShop();
 
-    // user作成
-    userRequest = UserCreateRequestFactory.createValidRequest();
-    userService.createUser(userRequest);
-
-    // location作成
-    location = new Location();
-    location.setLat(new BigDecimal("11.111111"));
-    location.setLon(new BigDecimal("111.111111"));
-    locationRepository.insert(location);
-
-    // base作成
-    base = new Base();
-    base.setName("fhaose");
-    base.setLocation(location);
-    baseRepository.insert(base);
-
-    // shop作成
-    shopRequest = new ShopCreateRequest();
-    shopRequest.setUrl("jfoaewh");
-    shopRequest.setName("hfoae");
-    shopRequest.setAddress("jfaoe");
-    shopRequest.setDistance(3829);
-    shopRequest.setMinutes(483);
-    shopRequest.setBaseId(base.getId());
-    shopRequest.setLocationLat(new BigDecimal("22.222222"));
-    shopRequest.setLocationLon(new BigDecimal("222.222222"));
-    shopService.createShop(shopRequest);
+    request = reviewCreateRequestFactory.builder().withShopId(shop.getId()).build();
   }
 
   @Nested
   public class review作成ができる場合{
     @Test
     public void 正しいリクエストだと作成できる() throws Exception {
-      MvcResult loginResult = mockMvc.perform(post("/api/login")
-        .param("email", userRequest.getEmail())
-        .param("password", userRequest.getPassword())
-        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .with(csrf()))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").exists())
-        .andExpect(jsonPath("$.name").value(userRequest.getName()))
-        .andReturn();
-      MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession();
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(userCreateRequest.getEmail(), userCreateRequest.getPassword());
+      
       mockMvc.perform(post("/api/reviews").session(session)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request))
@@ -128,18 +93,9 @@ public class ReviewCreateIntegrationTest {
 
     @Test
     public void 不正なリクエストだと作成できない() throws Exception {
-      request = ReviewCreateRequestFactory.builder().withImgPath("").build();
+      request.setImgPath("");
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(userCreateRequest.getEmail(), userCreateRequest.getPassword());
 
-      MvcResult loginResult = mockMvc.perform(post("/api/login")
-        .param("email", userRequest.getEmail())
-        .param("password", userRequest.getPassword())
-        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .with(csrf()))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").exists())
-        .andExpect(jsonPath("$.name").value(userRequest.getName()))
-        .andReturn();
-      MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession();
       mockMvc.perform(post("/api/reviews").session(session)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request))
