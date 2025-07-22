@@ -8,27 +8,22 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class ShopFaker {
-  
+public class ReviewFaker {
   private final Faker faker;
 
-  public String createUrl() {
+  public String createImgPath() {
     return faker.lorem().characters(1, 256);
   }
 
-  public String createName() {
+  public String createComment() {
     return faker.lorem().characters(1, 256);
   }
 
-  public String createAddress() {
-    return faker.lorem().characters(1, 256);
-  }
-
-  public Integer createDistance() {
+  public Integer createAmount() {
     return faker.number().hashCode();
   }
 
-  public Integer createMinutes() {
-    return faker.number().hashCode();
+  public Integer createEvaluation() {
+    return faker.number().numberBetween(0, 5);
   }
 }
