@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
@@ -44,6 +45,12 @@ public class ReviewService {
   }
 
   public void deleteReview(Integer reviewId) {
-    reviewRepository.delete(reviewId);
+    // deleteメソッドの戻り値（削除件数）で存在を判断する
+    int affectedRows = reviewRepository.delete(reviewId);
+    if (affectedRows == 0) {
+      // 1件も削除されなかった場合はリソースが存在しない
+      throw new ResourceNotFoundException("Review not found with id: " + reviewId);
+    }
+    
   }
 }

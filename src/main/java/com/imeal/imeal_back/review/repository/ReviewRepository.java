@@ -33,7 +33,7 @@ public interface ReviewRepository {
    * @param id 対象ReviewレコードのID
    */
   @Delete("delete from reviews where id = #{id}")
-  void delete(Integer id);
+  Integer delete(Integer id);
 
   // user情報も一緒に取得する
   @Select("select r.*, u.name as user_name from reviews r join users u on r.user_id = u.id where r.shop_id = #{shopId}")
