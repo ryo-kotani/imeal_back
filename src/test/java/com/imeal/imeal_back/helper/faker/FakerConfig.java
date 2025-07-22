@@ -1,4 +1,4 @@
-package com.imeal.imeal_back.helper.config;
+package com.imeal.imeal_back.helper.faker;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

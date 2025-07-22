@@ -1,10 +1,10 @@
-package com.imeal.imeal_back.helper;
+package com.imeal.imeal_back.helper.testData;
 
 import org.springframework.stereotype.Component;
 
-import com.github.javafaker.Faker;
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.base.repository.BaseRepository;
+import com.imeal.imeal_back.helper.faker.BaseFaker;
 import com.imeal.imeal_back.location.entity.Location;
 
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BaseTestDataFactory {
 
-  // 必須項目
-  private final Faker faker;
+  // 基本機能
+  private final BaseFaker baseFaker;
   private final BaseRepository baseRepository;
 
   // 外部キー制約のあるデータの生成
@@ -30,7 +30,7 @@ public class BaseTestDataFactory {
 
   public class BaseTestDataBuilder {
 
-    private String name = faker.lorem().characters(1, 256);
+    private String name = baseFaker.createName();
     private Location location;
 
     public BaseTestDataBuilder withName(String name) {

@@ -1,10 +1,10 @@
-package com.imeal.imeal_back.helper;
+package com.imeal.imeal_back.helper.testData;
 
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
 
-import com.github.javafaker.Faker;
+import com.imeal.imeal_back.helper.faker.LocationFaker;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.repository.LocationRepository;
 
@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LocationTestDataFactory {
 
-  // 必須項目
-  private final Faker faker;
+  // 基本機能
+  private final LocationFaker locationFaker;
   private final LocationRepository locationRepository;
 
   public Location createDefaultLocation() {
@@ -27,8 +27,8 @@ public class LocationTestDataFactory {
   }
 
   public class LocationTestDataBuilder {
-    private BigDecimal lat = new BigDecimal(faker.address().latitude());
-    private BigDecimal lon = new BigDecimal(faker.address().longitude());
+    private BigDecimal lat = locationFaker.createLat();
+    private BigDecimal lon = locationFaker.createLon();
 
     public LocationTestDataBuilder withLat(BigDecimal lat) {
       this.lat = lat;

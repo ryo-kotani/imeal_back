@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
 
-import com.github.javafaker.Faker;
+import com.imeal.imeal_back.helper.faker.LocationFaker;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LocationCreateRequestFactory {
 
-  private final Faker faker;
+  private final LocationFaker locationFaker;
 
   public LocationCreateRequest createValidRequest() {
     return builder().build();
@@ -25,8 +25,8 @@ public class LocationCreateRequestFactory {
 
   public class LocationCreateRequestBuilder {
 
-    private BigDecimal lat = new BigDecimal(faker.address().latitude());
-    private BigDecimal lon = new BigDecimal(faker.address().longitude());
+    private BigDecimal lat = locationFaker.createLat();
+    private BigDecimal lon = locationFaker.createLon();
 
     public LocationCreateRequestBuilder withLat(BigDecimal lat) {
       this.lat = lat;
