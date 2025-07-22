@@ -1,4 +1,4 @@
-package com.imeal.imeal_back.user.system;
+package com.imeal.imeal_back.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.imeal.imeal_back.ImealBackApplication;
+import com.imeal.imeal_back.helper.request.UserCreateRequestFactory;
+import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
 import com.imeal.imeal_back.user.entity.User;
-import com.imeal.imeal_back.user.factory.UserCreateRequestFactory;
 import com.imeal.imeal_back.user.repository.UserRepository;
-import com.imeal.imeal_back.user.service.UserService;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
@@ -29,20 +29,32 @@ public class LoginIntegrationTest {
   private MockMvc mockMvc;
 
   @Autowired
-  private UserService userService;
-
-  @Autowired
   private UserRepository userRepository;
 
-  private UserCreateRequest request;
+  @Autowired
+  private UserCreateRequestFactory userCreateRequestFactory;
+
+  @Autowired
+  private UserTestDataFactory userTestDataFactory;
+
+  private String loginEmail;
+  private String loginPassword;
 
   private User existUser;
 
   @BeforeEach
   public void setUp() {
-    request = UserCreateRequestFactory.createValidRequest();
-    userService.createUser(request);
-    existUser = userRepository.findByEmail(request.getEmail());
+    UserCreateRequest userCreateRequest = userCreateRequestFactory.createValidRequest();
+
+    loginEmail = userCreateRequest.getEmail();
+    loginPassword = userCreateRequest.getPassword();
+
+    userTestDataFactory.builder()
+      .withEmail(loginEmail)
+      .withPassword(loginPassword)
+      .buildAndPersist();
+
+    existUser = userRepository.findByEmail(loginEmail);
   }
 
   @Nested
@@ -50,8 +62,8 @@ public class LoginIntegrationTest {
     @Test
     public void 保存されているユーザー情報と合致すればログインできる() throws Exception {
       mockMvc.perform(post("/api/login")
-        .param("email", request.getEmail())
-        .param("password", request.getPassword())
+        .param("email", loginEmail)
+        .param("password", loginPassword)
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .with(csrf()))
         .andExpect(status().isOk())
@@ -65,7 +77,7 @@ public class LoginIntegrationTest {
     @Test
     public void 保存されているユーザー情報と合致しなければログインできない() throws Exception {
       mockMvc.perform(post("/api/login")
-        .param("email", request.getEmail())
+        .param("email", loginEmail)
         .param("password", "wrongPassword")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .with(csrf()))
