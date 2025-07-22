@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.base.repository.BaseRepository;
-import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.service.LocationService;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
@@ -25,13 +24,8 @@ public class ShopMapper {
     return response;
   }
 
-  public Shop toModel(ShopCreateRequest request) {
+  public Shop toModel(ShopCreateRequest request, Location location) {
     Base base = baseRepository.findById(request.getBaseId());
-
-    LocationCreateRequest locationCreateRequest = new LocationCreateRequest();
-    locationCreateRequest.setLat(request.getLocationLat());
-    locationCreateRequest.setLon(request.getLocationLon());
-    Location persistedLocation = locationService.createLocation(locationCreateRequest);
 
     Shop shop = new Shop();
     shop.setName(request.getName());
@@ -40,7 +34,7 @@ public class ShopMapper {
     shop.setDistance(request.getDistance());
     shop.setMinutes(request.getMinutes());
     shop.setBase(base);
-    shop.setLocation(persistedLocation);
+    shop.setLocation(location);
 
     return shop;
   }

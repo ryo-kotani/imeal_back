@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
-import com.imeal.imeal_back.location.service.LocationMapper;
 import com.imeal.imeal_back.location.service.LocationService;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopListResponse;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ShopService {
 
-  private final LocationMapper locationMapper;
   private final ShopRepository shopRepository;
   private final LocationService locationService;
   private final ShopMapper shopMapper;
@@ -33,7 +31,12 @@ public class ShopService {
   }
 
   public ShopResponse createShop(ShopCreateRequest request) {
-    Shop shop = shopMapper.toModel(request);
+    LocationCreateRequest locationCreateRequest = new LocationCreateRequest();
+    locationCreateRequest.setLat(request.getLocationLat());
+    locationCreateRequest.setLon(request.getLocationLon());
+    Location persistedLocation = locationService.createLocation(locationCreateRequest);
+
+    Shop shop = shopMapper.toModel(request, persistedLocation);
     shopRepository.insert(shop);
     return shopMapper.toResponse(shop);
   }
