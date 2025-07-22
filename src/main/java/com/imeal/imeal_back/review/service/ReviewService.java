@@ -24,6 +24,11 @@ public class ReviewService {
     return new ReviewsShopUserResponse(reviews);
   }
 
+  public ReviewShopUserResponse getReview(Integer reviewId){
+    Review reviewWithShop = reviewRepository.findWithShopLocationById(reviewId);
+    return reviewMapper.toResponse(reviewWithShop);
+  }
+
   public ReviewShopUserResponse createReview(Integer userId, ReviewCreateRequest request) {
     Review review = reviewMapper.toModel(request, userId);
     reviewRepository.insert(review);
