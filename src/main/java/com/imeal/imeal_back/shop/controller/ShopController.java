@@ -2,6 +2,7 @@ package com.imeal.imeal_back.shop.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.imeal.imeal_back.common.validation.ValidationGroups;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopListResponse;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
@@ -39,7 +41,7 @@ public class ShopController {
   }
 
   @PostMapping
-  public ResponseEntity<ShopResponse> createShop(@RequestBody ShopCreateRequest request) {
+  public ResponseEntity<ShopResponse> createShop(@Validated(ValidationGroups.Group.class) @RequestBody ShopCreateRequest request) {
     
     ShopResponse createdShop = shopService.createShop(request);
 
@@ -47,9 +49,15 @@ public class ShopController {
   }
   
   @GetMapping("/{shopId}/reviews")
+  public ShopResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
+    return shopService.getShopWithReviews(shopId);
+  }
+
+  @GetMapping("/{shopId}")
   public ShopResponse getShop(@PathVariable("shopId") Integer shopId) {
     return shopService.getShop(shopId);
   }
+  
   
   @DeleteMapping("/{shopId}")
   public ResponseEntity<Void> deleteShop(@PathVariable("shopId") Integer shopId) {
@@ -58,7 +66,7 @@ public class ShopController {
   }
 
   @PutMapping("/{shopId}")
-  public ShopResponse updateShop(@PathVariable("shopId") Integer shopId, @RequestBody ShopUpdateRequest request) {
+  public ShopResponse updateShop(@PathVariable("shopId") Integer shopId, @Validated(ValidationGroups.Group.class) @RequestBody ShopUpdateRequest request) {
     return shopService.updateShop(shopId, request);
   }
 }

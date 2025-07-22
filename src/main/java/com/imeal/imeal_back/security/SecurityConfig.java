@@ -53,8 +53,8 @@ public class SecurityConfig {
           // "users" → "user"に変更
           .requestMatchers(HttpMethod.POST, "/api/users", "/api/shops").permitAll()
           .requestMatchers(HttpMethod.PUT, "/api/users", "/api/shops/**").permitAll()
-          .requestMatchers(HttpMethod.DELETE, "/api/users", "/api/shops/**").permitAll()
-          .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases/**", "api/shops/**").permitAll()
+          .requestMatchers(HttpMethod.DELETE, "/api/users", "/api/shops/**", "/api/reviews/**").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/users", "/api/bases/**", "api/shops/**", "api/reviews/**").permitAll()
           .anyRequest().authenticated())
         .formLogin(login -> login
           .loginProcessingUrl("/api/login")

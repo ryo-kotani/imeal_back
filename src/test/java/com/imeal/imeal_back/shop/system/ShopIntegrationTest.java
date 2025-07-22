@@ -77,16 +77,17 @@ public class ShopIntegrationTest {
   // 各テストの前に実行
   @BeforeEach
   void setUp() {
-    // 全てのテストで共通して使用する拠点(Base)を作成・保存
-    // baseRepositoryを使ってDBに保存しないと、shop作成時に外部キー制約エラーになる
-    Base createBase = aBase().withName("テスト拠点1").build();
-    baseRepository.insert(createBase);
-    this.testBase = createBase;
-
     // locationの作成・保存
     Location createLocation = aLocation().withLat("35.123").withLon("139.0000").build();
     locationRepository.insert(createLocation);
     this.testLocation = createLocation;
+
+    // Baseの作成・保存
+    Base createBase = aBase().withName("テスト拠点1").withLocation(testLocation).build();
+    baseRepository.insert(createBase);
+    this.testBase = createBase;
+
+    
 
     // 店舗データを作成・保存
     Shop shop = new Shop();

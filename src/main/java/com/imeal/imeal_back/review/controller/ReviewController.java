@@ -47,6 +47,13 @@ public class ReviewController {
     return reviewService.createReview(currentUser.getUser().getId(), request);
   }
 
+  @GetMapping("/{reviewId}")
+  public ResponseEntity<ReviewShopUserResponse> getReview(@PathVariable("reviewId") Integer reviewId) {
+    ReviewShopUserResponse response = reviewService.getReview(reviewId);
+    return ResponseEntity.ok(response);
+  }
+  
+
   @PutMapping("/{reviewId}")
   @ResponseStatus(HttpStatus.CREATED)
   public ReviewShopUserResponse putReview(@PathVariable("reviewId") Integer reviewId, @RequestBody @Validated(ValidationGroups.Group.class) ReviewUpdateRequest request) {
@@ -54,7 +61,7 @@ public class ReviewController {
   }
 
   @DeleteMapping("/{reviewId}")
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteReview(@PathVariable("reviewId") Integer reviewId) {
     reviewService.deleteReview(reviewId);
   }
