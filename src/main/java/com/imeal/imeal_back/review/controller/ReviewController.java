@@ -61,7 +61,7 @@ public class ReviewController {
   }
 
   @DeleteMapping("/{reviewId}")
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteReview(@PathVariable("reviewId") Integer reviewId) {
     reviewService.deleteReview(reviewId);
   }
