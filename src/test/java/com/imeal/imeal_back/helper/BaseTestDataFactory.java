@@ -2,12 +2,9 @@ package com.imeal.imeal_back.helper;
 
 import org.springframework.stereotype.Component;
 
-import com.imeal.imeal_back.base.dto.BaseCreateRequest;
+import com.github.javafaker.Faker;
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.base.repository.BaseRepository;
-import com.imeal.imeal_back.helper.request.BaseCreateRequestFactory;
-import com.imeal.imeal_back.helper.request.LocationCreateRequestFactory;
-import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 
 import lombok.RequiredArgsConstructor;
@@ -15,8 +12,12 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class BaseTestDataFactory {
-  
+
+  // 必須項目
+  private final Faker faker;
   private final BaseRepository baseRepository;
+
+  // 外部キー制約のあるデータの生成
   private final LocationTestDataFactory locationTestDataFactory;
 
   public Base createDefaultBase() {
@@ -29,13 +30,8 @@ public class BaseTestDataFactory {
 
   public class BaseTestDataBuilder {
 
-    private String name;
+    private String name = faker.lorem().characters(1, 256);
     private Location location;
-
-    public BaseTestDataBuilder withBase(BaseCreateRequest baseCreateRequest) {
-      this.name = baseCreateRequest.getName();
-      return this;
-    }
 
     public BaseTestDataBuilder withName(String name) {
       this.name = name;
@@ -48,14 +44,8 @@ public class BaseTestDataFactory {
     }
 
     public Base build() {
-      if (this.name == null) {
-        BaseCreateRequest baseCreateRequest = BaseCreateRequestFactory.createValidRequest();
-        this.name = baseCreateRequest.getName();
-      }
-
       if (this.location == null) {
-        LocationCreateRequest locationCreateRequest = LocationCreateRequestFactory.createValidRequest();
-        this.location = locationTestDataFactory.createDefaultLocation(locationCreateRequest);
+        this.location = locationTestDataFactory.createDefaultLocation();
       }
 
       Base base = new Base();

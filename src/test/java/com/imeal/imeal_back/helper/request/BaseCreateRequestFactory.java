@@ -1,20 +1,26 @@
 package com.imeal.imeal_back.helper.request;
 
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Faker;
 import com.imeal.imeal_back.base.dto.BaseCreateRequest;
 
-public class BaseCreateRequestFactory {
-  private static final Faker faker = new Faker();
+import lombok.RequiredArgsConstructor;
 
-  public static BaseCreateRequest createValidRequest() {
+@Component
+@RequiredArgsConstructor
+public class BaseCreateRequestFactory {
+  private final Faker faker;
+
+  public BaseCreateRequest createValidRequest() {
     return builder().build();
   }
 
-  public static BaseCreateRequestBuilder builder() {
+  public BaseCreateRequestBuilder builder() {
     return new BaseCreateRequestBuilder();
   }
 
-  public static class BaseCreateRequestBuilder {
+  public class BaseCreateRequestBuilder {
 
     private String name = faker.lorem().characters(1, 256);
     private Integer locationId = 1;
@@ -31,8 +37,10 @@ public class BaseCreateRequestFactory {
 
     public BaseCreateRequest build() {
       BaseCreateRequest baseCreateRequest = new BaseCreateRequest();
+
       baseCreateRequest.setName(name);
       baseCreateRequest.setLocationId(locationId);
+      
       return baseCreateRequest;
     }
   }
