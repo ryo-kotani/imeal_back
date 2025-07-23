@@ -1,27 +1,33 @@
-package com.imeal.imeal_back.review.factory;
+package com.imeal.imeal_back.helper.request;
 
-import com.github.javafaker.Faker;
+import org.springframework.stereotype.Component;
+
+import com.imeal.imeal_back.helper.faker.ReviewFaker;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
 public class ReviewCreateRequestFactory {
-  private static final Faker FAKER = new Faker();
+  private final ReviewFaker reviewFaker;
 
   // デフォルトのリクエストオブジェクトを生成
-  public static ReviewCreateRequest createValidRequest() {
+  public ReviewCreateRequest createValidRequest() {
     return builder().build();
   }
 
   // ビルダーのエントリーポイント
-  public static ReviewCreateRequestBuilder builder() {
+  public ReviewCreateRequestBuilder builder() {
     return new ReviewCreateRequestBuilder();
   }
 
   // ランダムなリクエストオブジェクトを生成
-  public static class ReviewCreateRequestBuilder {
-    private String imgPath = FAKER.lorem().characters(1, 256);
-    private String comment = FAKER.lorem().characters(1, 256);
-    private Integer amount = FAKER.number().hashCode();
-    private Integer evaluation = FAKER.number().numberBetween(0, 5);
+  public class ReviewCreateRequestBuilder {
+    private String imgPath = reviewFaker.createImgPath();
+    private String comment = reviewFaker.createComment();
+    private Integer amount = reviewFaker.createAmount();
+    private Integer evaluation = reviewFaker.createEvaluation();
     private Integer shopId = 1;
 
     public ReviewCreateRequestBuilder withImgPath(String imgPath) {

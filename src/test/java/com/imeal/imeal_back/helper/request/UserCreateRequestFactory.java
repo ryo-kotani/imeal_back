@@ -1,27 +1,32 @@
-package com.imeal.imeal_back.user.factory;
+package com.imeal.imeal_back.helper.request;
 
-import com.github.javafaker.Faker;
+import org.springframework.stereotype.Component;
+
+import com.imeal.imeal_back.helper.faker.UserFaker;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
 
-public class UserCreateRequestFactory {
-  private static final Faker FAKER = new Faker();
+import lombok.RequiredArgsConstructor;
 
-  // デフォルトで有効なリクエストを返すメソッドはそのまま残す
-  public static UserCreateRequest createValidRequest() {
+@Component
+@RequiredArgsConstructor
+public class UserCreateRequestFactory {
+  private final UserFaker userFaker;
+
+  public UserCreateRequest createValidRequest() {
     return builder().build();
   }
 
   // Builderクラスへのエントリーポイント
-  public static UserCreateRequestBuilder builder() {
+  public UserCreateRequestBuilder builder() {
     return new UserCreateRequestBuilder();
   }
 
   // 内部クラスとしてBuilderを定義
-  public static class UserCreateRequestBuilder {
-    private String name = FAKER.lorem().characters(1, 10);
-    private String email = FAKER.internet().emailAddress();
-    private String password = FAKER.internet().password(6, 72);
-    private String passwordConfirmation = password; // デフォルトでは一致させておく
+  public class UserCreateRequestBuilder {
+    private String name = userFaker.createName();
+    private String email = userFaker.createEmail();
+    private String password = userFaker.createPassword();
+    private String passwordConfirmation = password;
 
     public UserCreateRequestBuilder withName(String name) {
       this.name = name;
