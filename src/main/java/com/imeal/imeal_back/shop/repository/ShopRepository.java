@@ -18,7 +18,8 @@ import com.imeal.imeal_back.shop.entity.Shop;
 
 @Mapper
 public interface ShopRepository {
-  @SelectProvider(type = ShopSqlBuilder.class, method = "buildSearchSql")
+  //拠点に紐づく店舗の情報を取得する
+  @SelectProvider(type = ShopSqlBuilder.class, method = "buildSearchSql") //sql文の生成はShopSqlBuilderで行う
   @Results(value={
     @Result(column = "location_id", property = "location.id"),
     @Result(column = "lat", property = "location.lat"),

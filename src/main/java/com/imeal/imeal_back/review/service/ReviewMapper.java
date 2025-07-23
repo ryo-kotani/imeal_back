@@ -3,7 +3,7 @@ package com.imeal.imeal_back.review.service;
 import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
-import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
+import com.imeal.imeal_back.review.dto.ReviewResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.entity.Shop;
@@ -48,9 +48,15 @@ public class ReviewMapper {
     return review;
   }
 
-  public ReviewShopUserResponse toResponse(Review review) {
-    ReviewShopUserResponse response = new ReviewShopUserResponse();
-    response.setReview(review);
+  public ReviewResponse toReviewResponse(Review review) {
+    ReviewResponse response = new ReviewResponse();
+    response.setImgPath(review.getImgPath());
+    response.setComment(review.getComment());
+    response.setAmount(review.getAmount());
+    response.setEvaluation(review.getEvaluation());
+    response.setCreatedAt(review.getCreatedAt());
+    response.setId(review.getId());
+
     return response;
   }
 }
