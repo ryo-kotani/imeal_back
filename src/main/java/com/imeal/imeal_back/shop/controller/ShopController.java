@@ -35,17 +35,13 @@ public class ShopController {
 
   @GetMapping
   public ResponseEntity<ShopsResponse> getShops(@RequestParam("baseId") Integer baseId) {
-
     ShopsResponse response = shopService.getShops(baseId);
-
     return ResponseEntity.ok(response);
   }
 
   @PostMapping
   public ResponseEntity<ShopResponse> createShop(@Validated(ValidationGroups.Group.class) @RequestBody ShopCreateRequest request) {
-    
     ShopResponse createdShop = shopService.createShop(request);
-
     return ResponseEntity.status(HttpStatus.CREATED).body(createdShop);
   }
   

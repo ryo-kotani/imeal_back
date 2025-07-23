@@ -22,8 +22,14 @@ public interface ShopRepository {
   @SelectProvider(type = ShopSqlBuilder.class, method = "buildSearchSql") //sql文の生成はShopSqlBuilderで行う
   @Results(value={
     @Result(column = "location_id", property = "location.id"),
-    @Result(column = "lat", property = "location.lat"),
-    @Result(column = "lon", property = "location.lon")
+    @Result(column = "shop_lat", property = "location.lat"),
+    @Result(column = "shop_lon", property = "location.lon"),
+    @Result(column = "base_id_alias", property = "bases.id"),
+    @Result(column = "base_name", property = "bases.name"),
+    // BaseのLocationのマッピング
+    @Result(column = "base_location_id", property = "bases.location.id"),
+    @Result(column = "base_lat", property = "bases.location.lat"),
+    @Result(column = "base_lon", property = "bases.location.lon")
   })
   List<Shop> findByX(@Param("baseId")Integer baseId);
 
