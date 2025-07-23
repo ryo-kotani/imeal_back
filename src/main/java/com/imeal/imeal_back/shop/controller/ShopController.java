@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.imeal.imeal_back.common.validation.ValidationGroups;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
-import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
+import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
+import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class ShopController {
   }
   
   @GetMapping("/{shopId}/reviews")
-  public ShopResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
+  public ShopReviewsResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
     return shopService.getShopWithReviews(shopId);
   }
 

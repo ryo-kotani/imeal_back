@@ -18,6 +18,6 @@ public class BaseService {
 
   public BasesResponse getBases() {
     List<Base> bases = baseRepository.findAll();
-    return baseMapper.toResponse(bases);
+    return baseMapper.toBasesResponse(bases);
   }
 }
