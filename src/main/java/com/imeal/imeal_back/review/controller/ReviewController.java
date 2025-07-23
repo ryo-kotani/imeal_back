@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.imeal.imeal_back.common.validation.ValidationGroups;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
+import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
 import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
@@ -48,9 +49,10 @@ public class ReviewController {
   }
 
   @GetMapping("/{reviewId}")
-  public ResponseEntity<ReviewShopUserResponse> getReview(@PathVariable("reviewId") Integer reviewId) {
-    ReviewShopUserResponse response = reviewService.getReview(reviewId);
-    return ResponseEntity.ok(response);
+  @ResponseStatus(HttpStatus.OK)
+  public ReviewShopResponse getReview(@PathVariable("reviewId") Integer reviewId) {
+    ReviewShopResponse response = reviewService.getReview(reviewId);
+    return response;
   }
   
 
@@ -61,7 +63,7 @@ public class ReviewController {
   }
 
   @DeleteMapping("/{reviewId}")
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteReview(@PathVariable("reviewId") Integer reviewId) {
     reviewService.deleteReview(reviewId);
   }

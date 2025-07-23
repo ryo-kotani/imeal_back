@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
+import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
 import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
@@ -21,29 +23,37 @@ public class ReviewService {
 
   public ReviewsShopUserResponse getReviews(Integer baseId, String sort, Integer limit) {
     List<Review> reviews = reviewRepository.findByX(baseId, sort, limit);
-    return new ReviewsShopUserResponse(reviews);
+    ReviewsShopUserResponse response = reviewMapper.toReviewsShopUserResponse(reviews);
+    return response;
   }
 
-  public ReviewShopUserResponse getReview(Integer reviewId){
+  //レビュー情報(単体) + 店舗情報を取得
+  public ReviewShopResponse getReview(Integer reviewId){
     Review reviewWithShop = reviewRepository.findWithShopLocationById(reviewId);
-    return reviewMapper.toResponse(reviewWithShop);
+    return reviewMapper.toReviewShopResponse(reviewWithShop);
   }
 
   public ReviewShopUserResponse createReview(Integer userId, ReviewCreateRequest request) {
     Review review = reviewMapper.toModel(request, userId);
     reviewRepository.insert(review);
     Review createdReview = reviewRepository.findWithShopLocationUserById(review.getId());
-    return reviewMapper.toResponse(createdReview);
+    return reviewMapper.toReviewShopUserResponse(createdReview);
   }
 
   public ReviewShopUserResponse updateReview(Integer reviewId, ReviewUpdateRequest request) {
     Review review = reviewMapper.toModelFromUpdate(request, reviewId);
     reviewRepository.update(review);
     Review updatedReview = reviewRepository.findWithShopLocationUserById(reviewId);
-    return reviewMapper.toResponse(updatedReview);
+    return reviewMapper.toReviewShopUserResponse(updatedReview);
   }
 
   public void deleteReview(Integer reviewId) {
-    reviewRepository.delete(reviewId);
+    // deleteメソッドの戻り値（削除件数）で存在を判断する
+    int affectedRows = reviewRepository.delete(reviewId);
+    if (affectedRows == 0) {
+      // 1件も削除されなかった場合はリソースが存在しない
+      throw new ResourceNotFoundException("Review not found with id: " + reviewId);
+    }
+    
   }
 }

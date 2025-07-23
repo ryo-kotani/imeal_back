@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.imeal.imeal_back.common.validation.ValidationGroups;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
-import com.imeal.imeal_back.shop.dto.ShopListResponse;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
+import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
+import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,23 +34,19 @@ public class ShopController {
   private final ShopService shopService;
 
   @GetMapping
-  public ResponseEntity<ShopListResponse> getShops(@RequestParam("baseId") Integer baseId) {
-
-    ShopListResponse response = shopService.getShops(baseId);
-
+  public ResponseEntity<ShopsResponse> getShops(@RequestParam("baseId") Integer baseId) {
+    ShopsResponse response = shopService.getShops(baseId);
     return ResponseEntity.ok(response);
   }
 
   @PostMapping
   public ResponseEntity<ShopResponse> createShop(@Validated(ValidationGroups.Group.class) @RequestBody ShopCreateRequest request) {
-    
     ShopResponse createdShop = shopService.createShop(request);
-
     return ResponseEntity.status(HttpStatus.CREATED).body(createdShop);
   }
   
   @GetMapping("/{shopId}/reviews")
-  public ShopResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
+  public ShopReviewsResponse getShopWithReviews(@PathVariable("shopId") Integer shopId) {
     return shopService.getShopWithReviews(shopId);
   }
 
