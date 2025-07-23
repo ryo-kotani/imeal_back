@@ -5,9 +5,12 @@ import org.apache.ibatis.jdbc.SQL;
 public class ReviewSqlBuilder {
 public String buildSearchSql(Integer baseId, String sort, Integer limit) {
     SQL sql = new SQL() {{
-      SELECT("s.*, r.*");
+      SELECT("s.url AS shop_url", "s.name as shop_name", "s.address as shop_address", "s.distance as shop_distance", "s.minutes as shop_minutes", "s.location_id AS shop_location_id", "s.location_lat AS shop_location_lat", "s.location_lon AS shop_location_lon", 
+              "r.*", 
+              "u.id AS user_id", "u.name AS user_name");
       FROM("reviews r");
-      INNER_JOIN("shops s ON s.id = r.shop_id"); 
+      LEFT_OUTER_JOIN("shops s ON s.id = r.shop_id"); 
+      LEFT_OUTER_JOIN("users u ON u.id = r.user_id");
       if (baseId != null) {
         WHERE ("base_id = #{baseId}");
       }
