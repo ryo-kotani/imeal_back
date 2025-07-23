@@ -18,6 +18,19 @@ import com.imeal.imeal_back.review.entity.Review;
 @Mapper
 public interface ReviewRepository {
   @SelectProvider(type = ReviewSqlBuilder.class, method = "buildSearchSql")
+  @Results({
+    @Result(column = "user_id", property = "user.id"),
+    @Result(column = "user_name", property = "user.name"),
+    @Result(column = "shop_id", property = "shop.id"),
+    @Result(column = "shop_url", property = "shop.url"),
+    @Result(column = "shop_name", property = "shop.name"),
+    @Result(column = "shop_address", property = "shop.address"),
+    @Result(column = "shop_distance", property = "shop.distance"),
+    @Result(column = "shop_minutes", property = "shop.minutes"),
+    @Result(column = "shop_location_id", property = "shop.location.id"),
+    @Result(column = "shop_location_lat", property = "shop.location.lat"),
+    @Result(column = "shop_location_lon", property = "shop.location.lon"),
+  })
   List<Review> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
 
   @Insert("insert into reviews (img_path, comment, amount, evaluation, shop_id, user_id) values (#{imgPath}, #{comment}, #{amount}, #{evaluation}, #{shop.id}, #{user.id})")
