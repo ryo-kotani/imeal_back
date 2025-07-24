@@ -9,7 +9,6 @@ import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
-import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.review.repository.ReviewRepository;
 
@@ -23,7 +22,7 @@ public class ReviewService {
 
   public List<ReviewShopUserResponse> getReviews(Integer baseId, String sort, Integer limit) {
     List<Review> reviews = reviewRepository.findByX(baseId, sort, limit);
-    ReviewsShopUserResponse response = reviewMapper.toReviewsShopUserResponse(reviews);
+    List<ReviewShopUserResponse> response = reviewMapper.toReviewsShopUserResponse(reviews);
     return response;
   }
 

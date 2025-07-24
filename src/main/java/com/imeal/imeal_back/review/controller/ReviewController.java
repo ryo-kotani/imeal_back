@@ -22,7 +22,6 @@ import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
 import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
-import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
 import com.imeal.imeal_back.review.service.ReviewService;
 import com.imeal.imeal_back.security.CustomUserDetails;
 
@@ -40,7 +39,7 @@ public class ReviewController {
   @GetMapping("")
   public ResponseEntity<List<ReviewShopUserResponse>> getReviews(@RequestParam("baseId")Integer baseId, 
                                                             @RequestParam(name = "sort", required = false)String sort, @RequestParam(name = "limit", required = false)Integer limit) {
-    ReviewsShopUserResponse response = reviewService.getReviews(baseId, sort, limit);
+    List<ReviewShopUserResponse> response = reviewService.getReviews(baseId, sort, limit);
     return ResponseEntity.ok(response);
   }
   
