@@ -163,8 +163,8 @@ public class ShopIntegrationTest {
       mockMvc.perform(get("/api/shops")
           .param("baseId", testBase.getId().toString()))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("$.shops", hasSize(1))) // setUpで1件登録したと仮定
-          .andExpect(jsonPath("$.shops[0].name").value("既存のテスト店舗"));
+          .andExpect(jsonPath("$.[*]", hasSize(1))) // setUpで1件登録したと仮定
+          .andExpect(jsonPath("$.[0].name").value("既存のテスト店舗"));
     }
 
     @Test
@@ -213,8 +213,8 @@ public class ShopIntegrationTest {
       request.setAddress(testShop.getAddress());
       request.setDistance(testShop.getDistance());
       request.setMinutes(testShop.getMinutes());
-      request.setLocationLat(BigDecimal.valueOf(35.657067));
-      request.setLocationLon(BigDecimal.valueOf(139.758693));
+      request.getLocation().setLat(BigDecimal.valueOf(35.657067));
+      request.getLocation().setLon(BigDecimal.valueOf(139.758693));
 
       // 2. 実行 (Act) & 3. 検証 (Assert)
       mockMvc.perform(put("/api/shops/" + testShop.getId())
@@ -233,8 +233,8 @@ public class ShopIntegrationTest {
       request.setAddress(testShop.getAddress());
       request.setDistance(testShop.getDistance());
       request.setMinutes(testShop.getMinutes());
-      request.setLocationLat(BigDecimal.valueOf(35.657067));
-      request.setLocationLon(BigDecimal.valueOf(139.758693));
+      request.getLocation().setLat(BigDecimal.valueOf(35.657067));
+      request.getLocation().setLon(BigDecimal.valueOf(139.758693));
 
       // 2. 実行 (Act) & 3. 検証 (Assert)
       mockMvc.perform(put("/api/shops/9999") // 存在しないID

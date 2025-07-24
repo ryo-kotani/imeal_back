@@ -1,5 +1,7 @@
 package com.imeal.imeal_back.shop.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +20,6 @@ import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
-import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class ShopController {
   private final ShopService shopService;
 
   @GetMapping
-  public ResponseEntity<ShopsResponse> getShops(@RequestParam("baseId") Integer baseId) {
-    ShopsResponse response = shopService.getShops(baseId);
+  public ResponseEntity<List<ShopResponse>> getShops(@RequestParam("baseId") Integer baseId) {
+    List<ShopResponse> response = shopService.getShops(baseId);
     return ResponseEntity.ok(response);
   }
 

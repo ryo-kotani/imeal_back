@@ -20,7 +20,6 @@ import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
-import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.shop.repository.ShopRepository;
 
@@ -54,14 +53,13 @@ public class ShopMapper {
     return response;
   }
   //Shop情報をリストにして返す
-  public ShopsResponse toShopsResponse(List<Shop> shops) {
+  public List<ShopResponse> toShopsResponse(List<Shop> shops) {
     List<ShopResponse> shopResponseList = new ArrayList<>();
 
     for(Shop shop: shops){
       shopResponseList.add(toShopResponse(shop));
     }
-    ShopsResponse response = new ShopsResponse(shopResponseList);
-    return response;
+    return shopResponseList;
   }
   //Shopとそれに紐づくレビュー情報のリストを返す
   public ShopReviewsResponse toShopReviewsResponse(Shop shop) {

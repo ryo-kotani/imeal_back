@@ -14,7 +14,6 @@ import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
-import com.imeal.imeal_back.shop.dto.ShopsResponse;
 import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.shop.repository.ShopRepository;
 
@@ -35,7 +34,7 @@ public class ShopService {
    * @param baseId 拠点のID
    * @return ShopsResponse
    */
-  public ShopsResponse getShops(Integer baseId) {
+  public List<ShopResponse> getShops(Integer baseId) {
     // 最初にbaseを取得
     Base base = baseRepository.findById(baseId);
     //baseが無かったらエラーを返す
@@ -44,7 +43,7 @@ public class ShopService {
     }
 
     List<Shop> shops = shopRepository.findByX(baseId); //店舗一覧を取得
-    ShopsResponse response = shopMapper.toShopsResponse(shops); //エンティティをレスポンスDTOに変換
+    List<ShopResponse> response = shopMapper.toShopsResponse(shops); //エンティティをレスポンスDTOに変換
     return response;
   }
 
@@ -89,14 +88,12 @@ public class ShopService {
     // Shopのlocation情報を取得して更新する
     Location existingLocation = shop.getLocation();
     if (existingLocation != null) {
-      existingLocation.setLat(request.getLocationLat());
-      existingLocation.setLon(request.getLocationLon());
+      existingLocation.setLat(request.getLocation().getLat());
+      existingLocation.setLon(request.getLocation().getLon());
       locationService.updateLocation(existingLocation);
     } else {
       //locationが無かったら新規作成する
-      LocationCreateRequest locationCreateRequest = new LocationCreateRequest();
-      locationCreateRequest.setLat(request.getLocationLat());
-      locationCreateRequest.setLon(request.getLocationLon());
+      LocationCreateRequest locationCreateRequest = request.getLocation();
       existingLocation = locationService.createLocation(locationCreateRequest);
     }
     shop.setLocation(existingLocation);
