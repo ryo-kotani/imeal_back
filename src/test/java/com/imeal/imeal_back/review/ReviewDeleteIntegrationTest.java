@@ -86,7 +86,7 @@ public class ReviewDeleteIntegrationTest {
     public void テーブルに存在しないと削除できない() throws Exception {
       // ログイン処理
       MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
-      Integer notExistId = 2;
+      Integer notExistId = 999;
 
       // 削除処理
       mockMvc.perform(delete("/api/reviews/" + notExistId).session(session)

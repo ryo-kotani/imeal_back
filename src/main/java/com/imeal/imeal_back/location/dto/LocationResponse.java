@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class LocationResponse {
   private Integer id;
-  private BigDecimal locationLon;
-  private BigDecimal locationLat;
+  private BigDecimal lon;
+  private BigDecimal lat;
 }
