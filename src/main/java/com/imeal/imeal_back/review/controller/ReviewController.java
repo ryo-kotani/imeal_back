@@ -1,5 +1,7 @@
 package com.imeal.imeal_back.review.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,7 +38,7 @@ public class ReviewController {
   private final ReviewService reviewService;
 
   @GetMapping("")
-  public ResponseEntity<ReviewsShopUserResponse> getReviews(@RequestParam("baseId")Integer baseId, 
+  public ResponseEntity<List<ReviewShopUserResponse>> getReviews(@RequestParam("baseId")Integer baseId, 
                                                             @RequestParam(name = "sort", required = false)String sort, @RequestParam(name = "limit", required = false)Integer limit) {
     ReviewsShopUserResponse response = reviewService.getReviews(baseId, sort, limit);
     return ResponseEntity.ok(response);

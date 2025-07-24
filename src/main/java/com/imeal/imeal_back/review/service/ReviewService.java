@@ -21,7 +21,7 @@ public class ReviewService {
   private final ReviewRepository reviewRepository;
   private final ReviewMapper reviewMapper;
 
-  public ReviewsShopUserResponse getReviews(Integer baseId, String sort, Integer limit) {
+  public List<ReviewShopUserResponse> getReviews(Integer baseId, String sort, Integer limit) {
     List<Review> reviews = reviewRepository.findByX(baseId, sort, limit);
     ReviewsShopUserResponse response = reviewMapper.toReviewsShopUserResponse(reviews);
     return response;
