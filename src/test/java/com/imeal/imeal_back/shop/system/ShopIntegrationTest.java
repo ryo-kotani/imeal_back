@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals; // BaseをDBに保存するために必要
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach; // BaseをDBに保存するために必要
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath; // テスト後のDB変更をロールバック
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional; // テスト後のDB変更をロールバック
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imeal.imeal_back.ImealBackApplication;
@@ -29,6 +29,7 @@ import static com.imeal.imeal_back.base.builder.BaseBuilder.aBase;
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.base.repository.BaseRepository;
 import static com.imeal.imeal_back.location.builder.LocationBuilder.aLocation;
+import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.repository.LocationRepository;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
@@ -69,8 +70,10 @@ public class ShopIntegrationTest {
     request.setDistance(100);
     request.setMinutes(5);
     request.setBaseId(baseId);
-    request.setLocationLat(new BigDecimal("35.681236"));
-    request.setLocationLon(new BigDecimal("139.767125"));
+    LocationCreateRequest location = new LocationCreateRequest();
+    location.setLat(new BigDecimal("35.681236"));
+    location.setLon(new BigDecimal("139.767125"));
+    request.setLocation(location);
     return request;
   }
 
@@ -113,7 +116,7 @@ public class ShopIntegrationTest {
     void 正常なリクエストで店舗を作成できる() throws Exception {
       // 1. 準備 (Arrange)
       ShopCreateRequest request = createValidShopCreateRequest(testBase.getId());
-      long countBefore = shopRepository.count(); // countメソッドをRepositoryに追加
+      long countBefore = shopRepository.count(); 
 
       // 2. 実行 (Act) & 3. 検証 (Assert)
       mockMvc.perform(post("/api/shops")

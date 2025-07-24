@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.helper.faker.LocationFaker;
 import com.imeal.imeal_back.helper.faker.ShopFaker;
+import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class ShopCreateRequestFactory {
     private Integer distance = shopFaker.createDistance();
     private Integer minutes = shopFaker.createMinutes();
     private Integer baseId = 1;
-    private BigDecimal locationLat = locationFaker.createLat();
-    private BigDecimal locationLon = locationFaker.createLon();
+    private BigDecimal lat = locationFaker.createLat();
+    private BigDecimal lon = locationFaker.createLon();
 
     public ShopCreateRequestBuilder withName(String name) {
       this.name = name;
@@ -67,13 +68,13 @@ public class ShopCreateRequestFactory {
       return this;
     }
 
-    public ShopCreateRequestBuilder withLocationLat(BigDecimal locationLat) {
-      this.locationLat = locationLat;
+    public ShopCreateRequestBuilder withLocationLat(BigDecimal lat) {
+      this.lat = lat;
       return this;
     }
 
-    public ShopCreateRequestBuilder withLocationLon(BigDecimal locationLon) {
-      this.locationLon = locationLon;
+    public ShopCreateRequestBuilder withLocationLon(BigDecimal lon) {
+      this.lon = lon;
       return this;
     }
 
@@ -86,9 +87,13 @@ public class ShopCreateRequestFactory {
       request.setDistance(distance);
       request.setMinutes(minutes);
       request.setBaseId(baseId);
-      request.setLocationLat(locationLat);
-      request.setLocationLon(locationLon);
-
+      
+      LocationCreateRequest location = new LocationCreateRequest();
+      location.setLat(lat);
+      location.setLon(lon);
+      
+      request.setLocation(location);
+      
       return request;
     }
   }
