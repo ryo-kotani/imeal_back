@@ -26,6 +26,10 @@ public interface BaseRepository {
   @Options(useGeneratedKeys=true, keyProperty="id")
   void insert(Base base);
 
-  @Select("SELECT * FROM bases WHERE id = #{id}")
+  @Select("SELECT b.*, l.lat, l.lon FROM bases b INNER JOIN locations l ON b.location_id=l.id WHERE b.id = #{id}")
+  @Results(value={
+    @Result(column="lat", property="location.lat"),
+    @Result(column="lon", property="location.lon")
+  })
   Base findById(Integer id);
 }

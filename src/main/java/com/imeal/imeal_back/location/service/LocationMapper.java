@@ -20,8 +20,8 @@ public class LocationMapper {
   public LocationResponse toResponse(Location location) {
     LocationResponse locationResponse = new LocationResponse();
     locationResponse.setId(location.getId());
-    locationResponse.setLocationLat(location.getLat());
-    locationResponse.setLocationLon(location.getLon());
+    locationResponse.setLat(location.getLat());
+    locationResponse.setLon(location.getLon());
 
     return locationResponse;
   }
