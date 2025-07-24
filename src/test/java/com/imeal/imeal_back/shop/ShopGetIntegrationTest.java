@@ -76,8 +76,8 @@ public class ShopGetIntegrationTest {
       mockMvc.perform(get("/api/shops")
         .param("baseId", base1.getId().toString()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.shops", hasSize(2)))
-        .andExpect(jsonPath("$.shops[0].name").value(shop1WithBase1.getName()));
+        .andExpect(jsonPath("$", hasSize(2)))
+        .andExpect(jsonPath("$.[0].name").value(shop1WithBase1.getName()));
     }
   }
 

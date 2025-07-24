@@ -80,7 +80,7 @@ public class ReviewUpdateIntegrationTest {
         .content(objectMapper.writeValueAsString(updateRequest))
         .with(csrf()))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.review.comment").value(updateRequest.getComment()));
+        .andExpect(jsonPath("$.comment").value(updateRequest.getComment()));
     }
   }
 

@@ -76,7 +76,7 @@ public class ReviewCreateIntegrationTest {
         .content(objectMapper.writeValueAsString(request))
         .with(csrf()))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.review").exists());
+        .andExpect(jsonPath("$.comment").value(request.getComment()));
     }
   }
 
