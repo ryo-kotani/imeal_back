@@ -11,7 +11,6 @@ import com.imeal.imeal_back.review.dto.ReviewResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
-import com.imeal.imeal_back.review.dto.ReviewsShopUserResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.entity.Shop;
@@ -87,7 +86,7 @@ public class ReviewMapper {
     return response;
   }
 
-  public ReviewsShopUserResponse toReviewsShopUserResponse(List<Review> reviews) {
+  public List<ReviewShopUserResponse> toReviewsShopUserResponse(List<Review> reviews) {
     List<ReviewShopUserResponse> responses = new ArrayList<>();
     for (Review review : reviews) {
       ReviewShopUserResponse response = new ReviewShopUserResponse();
@@ -106,7 +105,7 @@ public class ReviewMapper {
       responses.add(response);
     }
 
-    return new ReviewsShopUserResponse(responses);
+    return responses;
   }
   //レビュー + ショップ情報
   public ReviewShopResponse toReviewShopResponse(Review review) {
