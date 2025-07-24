@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.base.dto.BaseResponse;
-import com.imeal.imeal_back.base.dto.BasesResponse;
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.location.dto.LocationResponse;
 import com.imeal.imeal_back.location.service.LocationMapper;
@@ -33,14 +32,12 @@ public class BaseMapper {
     return response;
   }
 
-  public BasesResponse toBasesResponse(List<Base> bases) {
+  public List<BaseResponse> toBasesResponse(List<Base> bases) {
     List<BaseResponse> baseResponses = new ArrayList<>();
     for (Base base: bases) {
       baseResponses.add(toBaseResponse(base));
     }
 
-    BasesResponse response = new BasesResponse();
-    response.setBases(baseResponses);
-    return response;
+    return baseResponses;
   }
 }
