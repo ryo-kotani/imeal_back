@@ -49,9 +49,7 @@ public class ShopService {
   }
 
   public ShopResponse createShop(ShopCreateRequest request) {
-    LocationCreateRequest locationCreateRequest = new LocationCreateRequest();
-    locationCreateRequest.setLat(request.getLocationLat());
-    locationCreateRequest.setLon(request.getLocationLon());
+    LocationCreateRequest locationCreateRequest = request.getLocation();
     Location persistedLocation = locationService.createLocation(locationCreateRequest); //ロケーションサービスを呼び出してロケーションを作る
 
     Base foundBase = baseRepository.findById(request.getBaseId());
