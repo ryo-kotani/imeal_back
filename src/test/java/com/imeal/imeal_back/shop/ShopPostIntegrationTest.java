@@ -95,7 +95,7 @@ public class ShopPostIntegrationTest {
           .andExpect(status().isCreated())
           .andExpect(jsonPath("$.shop.id").exists())
           .andExpect(jsonPath("$.shop.name").value(request.getName()))
-          .andExpect(jsonPath("$.shop.location.lat").value(request.getLocationLat()));
+          .andExpect(jsonPath("$.shop.location.lat").value(request.getLocation().getLat()));
 
       // DBの状態変化を確認
       assertEquals(countBefore + 1, shopRepository.count());
