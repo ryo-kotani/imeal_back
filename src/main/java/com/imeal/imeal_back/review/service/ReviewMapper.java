@@ -3,6 +3,7 @@ package com.imeal.imeal_back.review.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
@@ -19,13 +20,19 @@ import com.imeal.imeal_back.user.dto.UserResponse;
 import com.imeal.imeal_back.user.entity.User;
 import com.imeal.imeal_back.user.service.UserMapper;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor
 public class ReviewMapper {
-  private final ShopMapper shopMapper;
+  private ShopMapper shopMapper;
   private final UserMapper userMapper;
+
+  @Autowired
+  public void setShopMapper(ShopMapper shopMapper) {
+      this.shopMapper = shopMapper;
+  }
+
+  public ReviewMapper(UserMapper userMapper) {
+    this.userMapper = userMapper;
+  }
   /**
    * Create処理専用
    * @param request
