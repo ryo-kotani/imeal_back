@@ -213,6 +213,7 @@ public class ShopIntegrationTest {
       request.setAddress(testShop.getAddress());
       request.setDistance(testShop.getDistance());
       request.setMinutes(testShop.getMinutes());
+      request.setLocation(new LocationCreateRequest());
       request.getLocation().setLat(BigDecimal.valueOf(35.657067));
       request.getLocation().setLon(BigDecimal.valueOf(139.758693));
 
@@ -233,6 +234,7 @@ public class ShopIntegrationTest {
       request.setAddress(testShop.getAddress());
       request.setDistance(testShop.getDistance());
       request.setMinutes(testShop.getMinutes());
+      request.setLocation(new LocationCreateRequest());
       request.getLocation().setLat(BigDecimal.valueOf(35.657067));
       request.getLocation().setLon(BigDecimal.valueOf(139.758693));
 
