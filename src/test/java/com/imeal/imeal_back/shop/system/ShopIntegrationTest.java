@@ -120,9 +120,9 @@ public class ShopIntegrationTest {
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isCreated())
-          .andExpect(jsonPath("$.shop.id").exists())
-          .andExpect(jsonPath("$.shop.name").value("テスト店舗"))
-          .andExpect(jsonPath("$.shop.location.lat").value(35.681236));
+          .andExpect(jsonPath("$.id").exists())
+          .andExpect(jsonPath("$.name").value("テスト店舗"))
+          .andExpect(jsonPath("$.location.lat").value(35.681236));
 
       // DBの状態変化を確認
       assertEquals(countBefore + 1, shopRepository.count());
@@ -165,11 +165,11 @@ public class ShopIntegrationTest {
     }
 
     @Test
-    void 存在しないbaseIdを指定すると空のリストが返る() throws Exception {
+    void 存在しないbaseIdを指定すると404エラーが返る() throws Exception {
       mockMvc.perform(get("/api/shops")
           .param("baseId", "9999")) // 存在しないID
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.shops", hasSize(0))); // 結果は空配列
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999")); // 結果は空配列
     }
   }
 
@@ -218,7 +218,7 @@ public class ShopIntegrationTest {
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("$.shop.name").value("更新された店舗名"));
+          .andExpect(jsonPath("$.name").value("更新された店舗名"));
     }
 
     @Test

@@ -34,7 +34,8 @@ public class ShopMapper {
   private final BaseRepository baseRepository;
   private final BaseMapper baseMapper;
   private final ShopRepository shopRepository;
-  private final ReviewMapper reviewMapper;
+
+  private ReviewMapper reviewMapper;
 
   //Shop情報（単体）とそれに紐づいたbaseとlocation情報を返すマッパー
   public ShopResponse toShopResponse(Shop shop) {
@@ -88,8 +89,7 @@ public class ShopMapper {
 
   
 
-  public Shop toModel(ShopCreateRequest request, Location location) {
-    Base base = baseRepository.findById(request.getBaseId());
+  public Shop toModel(ShopCreateRequest request, Location location, Base base) {
 
     Shop shop = new Shop();
     shop.setName(request.getName());

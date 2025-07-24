@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.imeal.imeal_back.base.entity.Base;
+import com.imeal.imeal_back.base.repository.BaseRepository;
 import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ShopService {
 
   private final ShopRepository shopRepository;
+  private final BaseRepository baseRepository;
   private final LocationService locationService;
   private final ShopMapper shopMapper;
 
@@ -33,6 +36,13 @@ public class ShopService {
    * @return ShopsResponse
    */
   public ShopsResponse getShops(Integer baseId) {
+    // 最初にbaseを取得
+    Base base = baseRepository.findById(baseId);
+    //baseが無かったらエラーを返す
+    if (base == null) {
+      throw new ResourceNotFoundException("Shop not found with id: " + baseId);
+    }
+
     List<Shop> shops = shopRepository.findByX(baseId); //店舗一覧を取得
     ShopsResponse response = shopMapper.toShopsResponse(shops); //エンティティをレスポンスDTOに変換
     return response;
@@ -44,7 +54,9 @@ public class ShopService {
     locationCreateRequest.setLon(request.getLocationLon());
     Location persistedLocation = locationService.createLocation(locationCreateRequest); //ロケーションサービスを呼び出してロケーションを作る
 
-    Shop shop = shopMapper.toModel(request, persistedLocation); //作ったロケーションとリクエストをセットしエンティティに変換する
+    Base foundBase = baseRepository.findById(request.getBaseId());
+
+    Shop shop = shopMapper.toModel(request, persistedLocation, foundBase); //作ったロケーションとリクエストをセットしエンティティに変換する
     shopRepository.insert(shop);
     return shopMapper.toShopResponse(shop);
   }
