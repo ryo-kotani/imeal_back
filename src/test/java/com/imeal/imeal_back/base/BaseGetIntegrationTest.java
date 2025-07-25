@@ -1,5 +1,6 @@
 package com.imeal.imeal_back.base;
 
+import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.imeal.imeal_back.ImealBackApplication;
 import com.imeal.imeal_back.base.entity.Base;
@@ -19,6 +21,7 @@ import com.imeal.imeal_back.helper.testData.BaseTestDataFactory;
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
 @AutoConfigureMockMvc
+@Transactional
 public class BaseGetIntegrationTest {
   
   @Autowired
@@ -42,6 +45,7 @@ public class BaseGetIntegrationTest {
     public void 正しいリクエストで取得できる() throws Exception {
       mockMvc.perform(get("/api/bases"))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.[*]", hasSize(3)))
         .andExpect(jsonPath("$.[0].name").value(existBase.getName()));
     }
   }

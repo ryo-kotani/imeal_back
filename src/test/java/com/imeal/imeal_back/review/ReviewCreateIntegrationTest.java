@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imeal.imeal_back.ImealBackApplication;
@@ -31,6 +32,7 @@ import com.imeal.imeal_back.user.dto.UserCreateRequest;
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
 @AutoConfigureMockMvc
+@Transactional
 public class ReviewCreateIntegrationTest {
 
   @Autowired
