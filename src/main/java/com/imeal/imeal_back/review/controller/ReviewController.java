@@ -39,6 +39,7 @@ public class ReviewController {
   @GetMapping("")
   public ResponseEntity<List<ReviewShopUserResponse>> getReviews(@RequestParam("baseId")Integer baseId, 
                                                             @RequestParam(name = "sort", required = false)String sort, @RequestParam(name = "limit", required = false)Integer limit) {
+    System.out.println("baseId: " + baseId + ", sort: " + sort + ", limit: " + limit);
     List<ReviewShopUserResponse> response = reviewService.getReviews(baseId, sort, limit);
     return ResponseEntity.ok(response);
   }
