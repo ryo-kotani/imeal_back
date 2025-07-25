@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.imeal.imeal_back.ImealBackApplication;
 import com.imeal.imeal_back.helper.lib.TestAuthHelper;
@@ -29,6 +30,7 @@ import com.imeal.imeal_back.user.dto.UserCreateRequest;
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
 @AutoConfigureMockMvc
+@Transactional
 public class ReviewDeleteIntegrationTest {
 
   @Autowired
