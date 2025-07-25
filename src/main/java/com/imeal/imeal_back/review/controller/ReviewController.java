@@ -3,7 +3,6 @@ package com.imeal.imeal_back.review.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,27 +35,50 @@ import lombok.RequiredArgsConstructor;
 public class ReviewController {
   private final ReviewService reviewService;
 
-  @GetMapping("")
-  public ResponseEntity<List<ReviewShopUserResponse>> getReviews(@RequestParam("baseId")Integer baseId, 
-                                                            @RequestParam(name = "sort", required = false)String sort, @RequestParam(name = "limit", required = false)Integer limit) {
-    System.out.println("baseId: " + baseId + ", sort: " + sort + ", limit: " + limit);
-    List<ReviewShopUserResponse> response = reviewService.getReviews(baseId, sort, limit);
-    return ResponseEntity.ok(response);
-  }
-  
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public ReviewShopUserResponse postReview(@RequestBody @Validated(ValidationGroups.Group.class) ReviewCreateRequest request, @AuthenticationPrincipal CustomUserDetails currentUser) {
-    return reviewService.createReview(currentUser.getUser().getId(), request);
+  /**
+   * 条件に合ったreviewのリストをレスポンスする
+   * 存在しない場合は404を返す
+   * @param baseId
+   * @param sort
+   * @param limit
+   * @return review, shop, userのリスト
+   */
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  public List<ReviewShopUserResponse> getReviews(
+    @RequestParam("baseId") Integer baseId,
+    @RequestParam(name = "sort", required = false) String sort,
+    @RequestParam(name = "limit", required = false) Integer limit
+  ) {
+    return reviewService.getReviews(baseId, sort, limit);
   }
 
+  /**
+   * reviewを単一で取得する
+   * 存在しない場合は404を返す
+   * @param reviewId
+   * @return reviewIdに紐づいたreview
+   */
   @GetMapping("/{reviewId}")
   @ResponseStatus(HttpStatus.OK)
   public ReviewShopResponse getReview(@PathVariable("reviewId") Integer reviewId) {
-    ReviewShopResponse response = reviewService.getReview(reviewId);
-    return response;
+    return reviewService.getReview(reviewId);
   }
-  
+
+  /**
+   * review情報はrequestから、user情報はcurrentUserから取得し、insertする
+   * @param request
+   * @param currentUser
+   * @return review, shop, userを返す
+   */
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public ReviewShopUserResponse postReview(
+    @RequestBody @Validated(ValidationGroups.Group.class) ReviewCreateRequest request,
+    @AuthenticationPrincipal CustomUserDetails currentUser
+  ) {
+    return reviewService.createReview(currentUser.getUser().getId(), request);
+  }
 
   @PutMapping("/{reviewId}")
   @ResponseStatus(HttpStatus.CREATED)

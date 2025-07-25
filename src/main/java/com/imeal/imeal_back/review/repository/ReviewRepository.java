@@ -23,7 +23,7 @@ public interface ReviewRepository {
    * @param baseId
    * @param sort
    * @param limit
-   * @return reviewのリスト（Optionalをつけることで存在しない場合はthrow必須になる）
+   * @return reviewのリスト（リスト型にOptionalをつけるとコンパイルエラーになる）
    */
   @SelectProvider(type = ReviewSqlBuilder.class, method = "buildSearchSql")
   @Results({
@@ -35,11 +35,11 @@ public interface ReviewRepository {
     @Result(column = "shop_address", property = "shop.address"),
     @Result(column = "shop_distance", property = "shop.distance"),
     @Result(column = "shop_minutes", property = "shop.minutes"),
-    @Result(column = "shop_location_id", property = "shop.location.id"),
-    @Result(column = "shop_location_lat", property = "shop.location.lat"),
-    @Result(column = "shop_location_lon", property = "shop.location.lon"),
+    @Result(column = "location_id", property = "shop.location.id"),
+    @Result(column = "location_lat", property = "shop.location.lat"),
+    @Result(column = "location_lon", property = "shop.location.lon"),
   })
-  Optional<List<Review>> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
+  List<Review> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
 
   @Insert("insert into reviews (img_path, comment, amount, evaluation, shop_id, user_id) values (#{imgPath}, #{comment}, #{amount}, #{evaluation}, #{shop.id}, #{user.id})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
@@ -130,6 +130,19 @@ public interface ReviewRepository {
       @Result(column = "location_lon", property = "shop.location.lon"),
   })
   Optional<Review> findWithShopLocationById(Integer id);
+
+  /**
+   * reviewに紐づいたエンティティは取得しない
+   * orElseThrow()で例外をスローする
+   * @param id
+   * @return Optionalでラップされたreviewオブジェクト
+   */
+  @Select("select * from reviews where id = #{id}")
+  @Results(value={
+    @Result(column="shop_id", property="shop.id"),
+    @Result(column="user_id", property="user.id")
+  })
+  Optional<Review> findById(Integer id);
 
   /**
    * テスト用カウント機能
