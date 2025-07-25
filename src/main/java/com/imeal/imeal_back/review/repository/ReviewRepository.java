@@ -23,7 +23,7 @@ public interface ReviewRepository {
    * @param baseId
    * @param sort
    * @param limit
-   * @return reviewのリスト（Optionalをつけることで存在しない場合はthrow必須になる）
+   * @return reviewのリスト（リスト型にOptionalをつけるとコンパイルエラーになる）
    */
   @SelectProvider(type = ReviewSqlBuilder.class, method = "buildSearchSql")
   @Results({
@@ -39,7 +39,7 @@ public interface ReviewRepository {
     @Result(column = "shop_location_lat", property = "shop.location.lat"),
     @Result(column = "shop_location_lon", property = "shop.location.lon"),
   })
-  Optional<List<Review>> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
+  List<Review> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
 
   @Insert("insert into reviews (img_path, comment, amount, evaluation, shop_id, user_id) values (#{imgPath}, #{comment}, #{amount}, #{evaluation}, #{shop.id}, #{user.id})")
   @Options(useGeneratedKeys = true, keyProperty = "id")

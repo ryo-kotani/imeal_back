@@ -32,8 +32,11 @@ public class ReviewService {
    */
   @Transactional(readOnly=true)
   public List<ReviewShopUserResponse> getReviews(Integer baseId, String sort, Integer limit) {
-    List<Review> reviews = reviewRepository.findByX(baseId, sort, limit)
-        .orElseThrow(() -> new ResourceNotFoundException("次の条件を満たすリソースが存在しません: baseId: " + baseId));
+    List<Review> reviews = reviewRepository.findByX(baseId, sort, limit);
+    // リソースが存在しない場合は例外をスローする
+    if (reviews.isEmpty()) {
+      throw new ResourceNotFoundException("次の条件を満たすリソースが存在しません: 拠点ID: " + baseId);
+    }
     List<ReviewShopUserResponse> response = reviewMapper.toReviewsShopUserResponse(reviews);
     return response;
   }
@@ -48,6 +51,8 @@ public class ReviewService {
     return reviewMapper.toReviewShopResponse(reviewWithShop);
   }
 
+  // @Transactionalを付与し、トランザクション処理にした
+  @Transactional
   public ReviewShopUserResponse createReview(Integer userId, ReviewCreateRequest request) {
     Review review = reviewMapper.toModel(request, userId);
     reviewRepository.insert(review);
