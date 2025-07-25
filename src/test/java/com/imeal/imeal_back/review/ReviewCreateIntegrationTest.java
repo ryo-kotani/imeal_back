@@ -58,15 +58,20 @@ public class ReviewCreateIntegrationTest {
   private ReviewRepository reviewRepository;
 
   private ReviewCreateRequest request;
-  private UserCreateRequest userCreateRequest;
+
+  // ログイン用
+  private String loginEmail;
+  private String loginPassword;
 
   private Integer beforeCount;
   private Integer afterCount;
   
   @BeforeEach
   public void setUp() {
-    userCreateRequest = userCreateRequestFactory.createValidRequest();
-    userTestDataFactory.builder().withEmail(userCreateRequest.getEmail()).withPassword(userCreateRequest.getPassword()).buildAndPersist();
+    UserCreateRequest userCreateRequest = userCreateRequestFactory.createValidRequest();
+    loginEmail = userCreateRequest.getEmail();
+    loginPassword = userCreateRequest.getPassword();
+    userTestDataFactory.builder().withEmail(loginEmail).withPassword(loginPassword).buildAndPersist();
     
     Shop shop = shopTestDataFactory.createDefaultShop();
 
@@ -78,7 +83,7 @@ public class ReviewCreateIntegrationTest {
   public class review作成ができる場合{
     @Test
     public void 正しいリクエストだと作成できる() throws Exception {
-      MockHttpSession session = testAuthHelper.performLoginAndGetSession(userCreateRequest.getEmail(), userCreateRequest.getPassword());
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
 
       mockMvc.perform(post("/api/reviews").session(session)
         .contentType(MediaType.APPLICATION_JSON)
@@ -110,7 +115,7 @@ public class ReviewCreateIntegrationTest {
     @Test
     public void 不正なリクエストだと作成できない() throws Exception {
       request.setImgPath("");
-      MockHttpSession session = testAuthHelper.performLoginAndGetSession(userCreateRequest.getEmail(), userCreateRequest.getPassword());
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
 
       mockMvc.perform(post("/api/reviews").session(session)
         .contentType(MediaType.APPLICATION_JSON)

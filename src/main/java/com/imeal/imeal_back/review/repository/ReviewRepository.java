@@ -132,6 +132,19 @@ public interface ReviewRepository {
   Optional<Review> findWithShopLocationById(Integer id);
 
   /**
+   * reviewに紐づいたエンティティは取得しない
+   * orElseThrow()で例外をスローする
+   * @param id
+   * @return Optionalでラップされたreviewオブジェクト
+   */
+  @Select("select * from reviews where id = #{id}")
+  @Results(value={
+    @Result(column="shop_id", property="shop.id"),
+    @Result(column="user_id", property="user.id")
+  })
+  Optional<Review> findById(Integer id);
+
+  /**
    * テスト用カウント機能
    * 
    * @return Reviewテーブルのレコード数

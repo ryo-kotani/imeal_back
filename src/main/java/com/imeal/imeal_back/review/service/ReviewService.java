@@ -60,9 +60,15 @@ public class ReviewService {
     return reviewMapper.toReviewShopUserResponse(createdReview);
   }
 
+  // @Transactionalを付与し、トランザクション処理にした
+  @Transactional
   public ReviewShopUserResponse updateReview(Integer reviewId, ReviewUpdateRequest request) {
-    Review review = reviewMapper.toModelFromUpdate(request, reviewId);
-    reviewRepository.update(review);
+    // 存在しない場合は例外をスローする
+    Review review = reviewRepository.findById(reviewId)
+      .orElseThrow(() -> new ResourceNotFoundException("次の条件を満たすリソースが存在しません: 口コミID: " + reviewId));
+
+    Review reviewToUpdate = reviewMapper.toModelFromUpdate(request, reviewId);
+    reviewRepository.update(reviewToUpdate);
     Review updatedReview = reviewRepository.findWithShopLocationUserById(reviewId);
     return reviewMapper.toReviewShopUserResponse(updatedReview);
   }

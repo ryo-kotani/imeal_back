@@ -1,5 +1,6 @@
 package com.imeal.imeal_back.review;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import com.imeal.imeal_back.helper.testData.ReviewTestDataFactory;
 import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
 import com.imeal.imeal_back.review.entity.Review;
+import com.imeal.imeal_back.review.repository.ReviewRepository;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
 
 @ActiveProfiles("test")
@@ -52,6 +54,9 @@ public class ReviewUpdateIntegrationTest {
   @Autowired
   private UserCreateRequestFactory userCreateRequestFactory;
 
+  @Autowired
+  private ReviewRepository reviewRepository;
+
   private ReviewUpdateRequest updateRequest;
   private Review existReview;
   private String loginEmail;
@@ -74,13 +79,20 @@ public class ReviewUpdateIntegrationTest {
   public class review更新ができる場合{
     @Test
     public void 正しいリクエストだと更新できる() throws Exception {
+      // ログイン処理
       MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
+
+      // updateメソッドを実行・確認
       mockMvc.perform(put("/api/reviews/" + existReview.getId()).session(session)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateRequest))
         .with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.comment").value(updateRequest.getComment()));
+
+      // テーブルのreviewを確認
+      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      assertEquals(updateRequest.getComment(), updatedReview.getComment());
     }
   }
 
@@ -88,23 +100,49 @@ public class ReviewUpdateIntegrationTest {
   public class review更新ができない場合{
     @Test
     public void ログインしていないと更新できない() throws Exception {
+      // updateメソッドを実行・確認
       mockMvc.perform(put("/api/reviews/" + existReview.getId())
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateRequest))
         .with(csrf()))
         .andExpect(status().is3xxRedirection());
+
+      // テーブルのreviewを確認
+      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      assertEquals(existReview.getComment(), updatedReview.getComment());
     }
 
     @Test
     public void 不正なリクエストだと更新できない() throws Exception {
+      // 不正なリクエスト作成・ログイン
       updateRequest = reviewUpdateRequestFactory.builder().withImgPath("").build();
       MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
 
+      // update処理を実行・確認
       mockMvc.perform(put("/api/reviews/" + existReview.getId()).session(session)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateRequest))
         .with(csrf()))
         .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.messages").exists());
+
+      // テーブルのreviewを確認
+      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      assertEquals(existReview.getComment(), updatedReview.getComment());
+    }
+
+    @Test
+    public void 存在しない口コミは更新できない() throws Exception {
+      // 準備
+      Integer notExistReviewId = 9999;
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
+
+      // 実行
+      mockMvc.perform(put("/api/reviews/" + notExistReviewId).session(session)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(updateRequest))
+        .with(csrf()))
+        .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.messages").exists());
     }
   }
