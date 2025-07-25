@@ -95,7 +95,7 @@ public class ShopGetIntegrationTest {
     public void shopIdを指定して店舗に紐づくレビュー一覧を取得できる() throws Exception {
       mockMvc.perform(get("/api/shops/" + shop1WithBase1.getId() + "/reviews"))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("$.reviews", hasSize(2)))
+          .andExpect(jsonPath("$.reviews.[*]", hasSize(2)))
           .andExpect(jsonPath("$.reviews.[0].review.id").value(review1WithShop1.getId()));
     }
   }

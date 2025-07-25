@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
-import com.imeal.imeal_back.review.dto.ReviewResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
-import com.imeal.imeal_back.review.dto.ReviewsResponse;
+import com.imeal.imeal_back.review.dto.ReviewUserResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.entity.Shop;
@@ -122,9 +121,9 @@ public class ReviewMapper {
 
     return response;
   }
-  //shopに紐づくレビュー情報のセット用
-  public ReviewResponse toReviewResponse(Review review) {
-    ReviewResponse response = new ReviewResponse();
+  //review情報のみ入れて返却
+  public ReviewUserResponse toReviewUserResponse(Review review) {
+    ReviewUserResponse response = new ReviewUserResponse();
     response.setImgPath(review.getImgPath());
     response.setComment(review.getComment());
     response.setAmount(review.getAmount());
@@ -135,13 +134,11 @@ public class ReviewMapper {
     return response;
   }
 
-  public ReviewsResponse toReviewsResponse(List<Review> reviews) {
-    List<ReviewResponse> reviewResponses = new ArrayList<>();
-    for(Review review : reviews) {
-      reviewResponses.add(toReviewResponse(review));
-    };
-    ReviewsResponse response = new ReviewsResponse();
-    response.setReviews(reviewResponses);
-    return response;
-  }
+  // public List<ReviewResponse> toReviewList(List<Review> reviews) {
+  //   List<ReviewResponse> reviewResponses = new ArrayList<>();
+  //   for(Review review : reviews) {
+  //     reviewResponses.add(toReviewResponse(review));
+  //   };
+  //   return reviewResponses;
+  // }
 }

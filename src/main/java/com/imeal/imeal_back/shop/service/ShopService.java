@@ -1,5 +1,6 @@
 package com.imeal.imeal_back.shop.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,7 +11,9 @@ import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.service.LocationService;
-import com.imeal.imeal_back.review.dto.ReviewsResponse;
+import com.imeal.imeal_back.review.dto.ReviewNestResponse;
+import com.imeal.imeal_back.review.dto.ReviewUserResponse;
+import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.review.service.ReviewMapper;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
@@ -18,6 +21,8 @@ import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
 import com.imeal.imeal_back.shop.dto.ShopUpdateRequest;
 import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.shop.repository.ShopRepository;
+import com.imeal.imeal_back.user.dto.UserResponse;
+import com.imeal.imeal_back.user.service.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +35,7 @@ public class ShopService {
   private final LocationService locationService;
   private final ShopMapper shopMapper;
   private final ReviewMapper reviewMapper;
+  private final UserMapper userMapper;
 
   
   /**
@@ -64,12 +70,21 @@ public class ShopService {
   public ShopReviewsResponse getShopWithReviews(Integer id) {
     Shop shop = shopRepository.findByIdWithReviews(id);
     ShopReviewsResponse shopReviewsResponse = shopMapper.toShopReviewsResponse(shop); //shop情報だけ格納される(レビュー情報は空)
-
-    ReviewsResponse reviews = reviewMapper.toReviewsResponse(shop.getReviews());
+    
+    List<ReviewNestResponse> reviews = new ArrayList<>();
+    for(Review review : shop.getReviews()) {
+      ReviewUserResponse reviewUserResponse = reviewMapper.toReviewUserResponse(review);
+      UserResponse userResponse = userMapper.toResponse(review.getUser());
+      reviewUserResponse.setUser(userResponse);
+      ReviewNestResponse reviwNest = new ReviewNestResponse();
+      reviwNest.setReview(reviewUserResponse);
+      reviews.add(reviwNest);
+    }
     shopReviewsResponse.setReviews(reviews);
 
     return shopReviewsResponse;
-    //shop情報を格納→reviewsResponseを作る→合体する
+    //shop情報を格納
+    //レビューのリスト:ReviewsUserResponseを作る→ReviewsNestResponseに格納する→List<ReviewsNestResponse>を作る
 
   }
 
