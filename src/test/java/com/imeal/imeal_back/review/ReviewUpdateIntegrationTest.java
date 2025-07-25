@@ -91,7 +91,7 @@ public class ReviewUpdateIntegrationTest {
         .andExpect(jsonPath("$.comment").value(updateRequest.getComment()));
 
       // テーブルのreviewを確認
-      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      Review updatedReview = reviewRepository.findById(existReview.getId()).orElseThrow();
       assertEquals(updateRequest.getComment(), updatedReview.getComment());
     }
   }
@@ -108,7 +108,7 @@ public class ReviewUpdateIntegrationTest {
         .andExpect(status().is3xxRedirection());
 
       // テーブルのreviewを確認
-      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      Review updatedReview = reviewRepository.findById(existReview.getId()).orElseThrow();
       assertEquals(existReview.getComment(), updatedReview.getComment());
     }
 
@@ -127,7 +127,7 @@ public class ReviewUpdateIntegrationTest {
         .andExpect(jsonPath("$.messages").exists());
 
       // テーブルのreviewを確認
-      Review updatedReview = reviewRepository.findWithShopLocationById(existReview.getId()).orElseThrow();
+      Review updatedReview = reviewRepository.findById(existReview.getId()).orElseThrow();
       assertEquals(existReview.getComment(), updatedReview.getComment());
     }
 
