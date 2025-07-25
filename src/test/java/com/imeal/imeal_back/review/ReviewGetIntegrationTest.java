@@ -70,16 +70,33 @@ public class ReviewGetIntegrationTest {
 
   @Nested
   class リスト取得できない場合 {
-
+    @Test
+    public void 存在しない条件では取得できない() throws Exception {
+      Integer notExistBaseId = 999;
+      mockMvc.perform(get("/api/reviews?baseId=" + notExistBaseId))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.messages").exists());
+    }
   }
 
   @Nested
   class 単体取得できる場合 {
-
+    @Test
+    public void 正しいリクエストで取得できる() throws Exception {
+      mockMvc.perform(get("/api/reviews/" + existReview1.getId()))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.comment").value(existReview1.getComment()));
+    }
   }
 
   @Nested
   class 単体取得できない場合 {
-
+    @Test
+    public void 存在しない口コミは取得できない() throws Exception {
+      Integer notExistId = 9999;
+      mockMvc.perform(get("/api/reviews/" + notExistId))
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.messages").exists());
+    }
   }
 }
