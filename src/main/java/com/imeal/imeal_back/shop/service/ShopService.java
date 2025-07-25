@@ -69,6 +69,10 @@ public class ShopService {
 
   public ShopReviewsResponse getShopWithReviews(Integer id) {
     Shop shop = shopRepository.findByIdWithReviews(id);
+    //Shopが無かったらエラーを返す
+    if (shop == null) {
+      throw new ResourceNotFoundException("Shop not found with id: " + id);
+    }
     ShopReviewsResponse shopReviewsResponse = shopMapper.toShopReviewsResponse(shop); //shop情報だけ格納される(レビュー情報は空)
     
     List<ReviewNestResponse> reviews = new ArrayList<>();
@@ -90,6 +94,10 @@ public class ShopService {
 
   public ShopResponse getShop(Integer id) {
     Shop shop = shopRepository.findByIdWithLocation(id);
+    //Shopが無かったらエラーを返す
+    if (shop == null) {
+      throw new ResourceNotFoundException("Shop not found with id: " + id);
+    }
     return shopMapper.toShopResponse(shop);
   }
 

@@ -1,5 +1,7 @@
 package com.imeal.imeal_back.shop;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +27,7 @@ import com.imeal.imeal_back.helper.request.UserCreateRequestFactory;
 import com.imeal.imeal_back.helper.testData.BaseTestDataFactory;
 import com.imeal.imeal_back.helper.testData.LocationTestDataFactory;
 import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
+import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.repository.ShopRepository;
@@ -32,7 +36,7 @@ import com.imeal.imeal_back.user.dto.UserCreateRequest;
 @ActiveProfiles("test")
 @SpringBootTest(classes=ImealBackApplication.class)
 @AutoConfigureMockMvc
-public class ShopPostIntegrationTest {
+public class ShopCreateIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
@@ -87,15 +91,18 @@ public class ShopPostIntegrationTest {
       long countBefore = shopRepository.count();
       MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
       ShopCreateRequest request = shopCreateRequestFactory.createValidRequest();
+      LocationCreateRequest locationRequest = request.getLocation();
+      BigDecimal expectedLat = locationRequest.getLat();
 
       // 2. 実行 (Act) & 3. 検証 (Assert)
       mockMvc.perform(post("/api/shops").session(session)
           .contentType(MediaType.APPLICATION_JSON)
-          .content(objectMapper.writeValueAsString(request)))
+          .content(objectMapper.writeValueAsString(request))
+          .with(csrf()))
           .andExpect(status().isCreated())
-          .andExpect(jsonPath("$.shop.id").exists())
-          .andExpect(jsonPath("$.shop.name").value(request.getName()))
-          .andExpect(jsonPath("$.shop.location.lat").value(request.getLocation().getLat()));
+          .andExpect(jsonPath("$.id").exists())
+          .andExpect(jsonPath("$.name").value(request.getName()))
+          .andExpect(jsonPath("$.location.lat").value(expectedLat));
 
       // DBの状態変化を確認
       assertEquals(countBefore + 1, shopRepository.count());
@@ -104,6 +111,40 @@ public class ShopPostIntegrationTest {
 
   @Nested
   class 作成に失敗する場合 {
+    //TODO:securityConfigの設定を変更した後にテストが通ることを確認する
+    @Test
+    public void ログインしていないと店舗を作成できない() throws Exception {
+      long countBefore = shopRepository.count();
+      ShopCreateRequest request = shopCreateRequestFactory.createValidRequest();
 
+      mockMvc.perform(post("/api/shops")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(request))
+          .with(csrf()))
+          .andExpect(status().is3xxRedirection());
+
+      // DBの状態が変化していないことを確認
+      assertEquals(countBefore, shopRepository.count());
+    }
+
+    @Test
+    public void 不正なリクエストだと作成できない() throws Exception {
+      // 1. 準備 (Arrange)
+      long countBefore = shopRepository.count();
+      MockHttpSession session = testAuthHelper.performLoginAndGetSession(loginEmail, loginPassword);
+      ShopCreateRequest request = shopCreateRequestFactory.createValidRequest();
+      request.setUrl("");//空のURL
+
+      // 2. 実行 (Act) & 3. 検証 (Assert)
+      mockMvc.perform(post("/api/shops").session(session)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(request))
+          .with(csrf()))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.messages").exists());
+
+      // DBの状態が変化していないことを確認
+      assertEquals(countBefore, shopRepository.count());
+    }
   }
 }
