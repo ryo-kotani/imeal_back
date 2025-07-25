@@ -10,6 +10,8 @@ import com.imeal.imeal_back.common.exception.ResourceNotFoundException;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.service.LocationService;
+import com.imeal.imeal_back.review.dto.ReviewsResponse;
+import com.imeal.imeal_back.review.service.ReviewMapper;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
@@ -27,6 +29,7 @@ public class ShopService {
   private final BaseRepository baseRepository;
   private final LocationService locationService;
   private final ShopMapper shopMapper;
+  private final ReviewMapper reviewMapper;
 
   
   /**
@@ -60,7 +63,14 @@ public class ShopService {
 
   public ShopReviewsResponse getShopWithReviews(Integer id) {
     Shop shop = shopRepository.findByIdWithReviews(id);
-    return shopMapper.toShopReviewsResponse(shop);
+    ShopReviewsResponse shopReviewsResponse = shopMapper.toShopReviewsResponse(shop); //shop情報だけ格納される(レビュー情報は空)
+
+    ReviewsResponse reviews = reviewMapper.toReviewsResponse(shop.getReviews());
+    shopReviewsResponse.setReviews(reviews);
+
+    return shopReviewsResponse;
+    //shop情報を格納→reviewsResponseを作る→合体する
+
   }
 
   public ShopResponse getShop(Integer id) {

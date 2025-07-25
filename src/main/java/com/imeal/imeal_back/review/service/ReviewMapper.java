@@ -11,6 +11,7 @@ import com.imeal.imeal_back.review.dto.ReviewResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopResponse;
 import com.imeal.imeal_back.review.dto.ReviewShopUserResponse;
 import com.imeal.imeal_back.review.dto.ReviewUpdateRequest;
+import com.imeal.imeal_back.review.dto.ReviewsResponse;
 import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.entity.Shop;
@@ -131,6 +132,16 @@ public class ReviewMapper {
     response.setCreatedAt(review.getCreatedAt());
     response.setId(review.getId());
 
+    return response;
+  }
+
+  public ReviewsResponse toReviewsResponse(List<Review> reviews) {
+    List<ReviewResponse> reviewResponses = new ArrayList<>();
+    for(Review review : reviews) {
+      reviewResponses.add(toReviewResponse(review));
+    };
+    ReviewsResponse response = new ReviewsResponse();
+    response.setReviews(reviewResponses);
     return response;
   }
 }
