@@ -44,6 +44,15 @@ public interface ShopRepository {
   })
   Shop findByIdWithReviews(Integer id);
 
+  @Select("SELECT s.*, l.lat, l.lon FROM shops s LEFT JOIN locations l ON s.location_id = l.id WHERE s.id = #{id}")
+  @Results(value = {
+    @Result(column = "id", property = "id"),
+    @Result(column = "location_id", property = "location.id"),
+    @Result(column ="lat", property = "location.lat"),
+    @Result(column = "lon", property = "location.lon")
+  })
+  Shop findByIdWithLocation(Integer id);
+
   @Select("SELECT * FROM shops WHERE id = #{id}")
   Shop findById(Integer id);
 

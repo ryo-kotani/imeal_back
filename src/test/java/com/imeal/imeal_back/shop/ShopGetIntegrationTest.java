@@ -98,6 +98,14 @@ public class ShopGetIntegrationTest {
           .andExpect(jsonPath("$.reviews.[*]", hasSize(2)))
           .andExpect(jsonPath("$.reviews.[0].review.id").value(review1WithShop1.getId()));
     }
+
+    @Test
+    public void 飲食店情報が単体で取得できる() throws Exception {
+      mockMvc.perform(get("/api/shops/" + shop1WithBase1.getId()))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").exists()) 
+          .andExpect(jsonPath("$.id").value(shop1WithBase1.getId()));
+    }
   }
 
   @Nested

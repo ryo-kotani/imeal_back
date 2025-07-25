@@ -89,7 +89,7 @@ public class ShopService {
   }
 
   public ShopResponse getShop(Integer id) {
-    Shop shop = shopRepository.findById(id);
+    Shop shop = shopRepository.findByIdWithLocation(id);
     return shopMapper.toShopResponse(shop);
   }
 
