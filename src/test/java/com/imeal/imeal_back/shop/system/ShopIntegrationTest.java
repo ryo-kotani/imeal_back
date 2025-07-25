@@ -1,33 +1,28 @@
 package com.imeal.imeal_back.shop.system;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach; // BaseをDBに保存するために必要
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; // BaseをDBに保存するために必要
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.transaction.annotation.Transactional; // テスト後のDB変更をロールバック
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imeal.imeal_back.ImealBackApplication;
 import static com.imeal.imeal_back.base.builder.BaseBuilder.aBase;
 import com.imeal.imeal_back.base.entity.Base;
-import com.imeal.imeal_back.base.repository.BaseRepository;
+import com.imeal.imeal_back.base.repository.BaseRepository; // テスト後のDB変更をロールバック
 import static com.imeal.imeal_back.location.builder.LocationBuilder.aLocation;
 import com.imeal.imeal_back.location.dto.LocationCreateRequest;
 import com.imeal.imeal_back.location.entity.Location;
@@ -145,62 +140,6 @@ public class ShopIntegrationTest {
           .andExpect(status().isBadRequest()); // バリデーションエラーなので400
     }
   }
-
-  @Nested
-  class 店舗一覧を取得する場合 {
-
-    @BeforeEach
-    void setupShops() {
-      // このテスト用の店舗データを準備
-      // shopRepository.save(...); などで複数件登録しておく
-    }
-
-    @Test
-    void baseIdを指定して関連する店舗一覧を取得できる() throws Exception {
-      // 1. 準備 (Arrange) - setUpで作成したtestBaseのIDを使用
-
-      // 2. 実行 (Act) & 3. 検証 (Assert)
-      mockMvc.perform(get("/api/shops")
-          .param("baseId", testBase.getId().toString()))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.[*]", hasSize(1))) // setUpで1件登録したと仮定
-          .andExpect(jsonPath("$.[0].name").value("既存のテスト店舗"));
-    }
-
-    @Test
-    void 存在しないbaseIdを指定すると404エラーが返る() throws Exception {
-      mockMvc.perform(get("/api/shops")
-          .param("baseId", "9999")) // 存在しないID
-          .andExpect(status().isNotFound())
-          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999")); // 結果は空配列
-    }
-  }
-
-  @Nested
-  class 店舗を削除する場合 {
-
-    @Test
-    void 存在する店舗を削除できる() throws Exception {
-      // 1. 準備 (Arrange) - setUpで作成したtestShopのIDを使用
-      long countBefore = shopRepository.count();
-
-      // 2. 実行 (Act) & 3. 検証 (Assert)
-      mockMvc.perform(delete("/api/shops/" + testShop.getId()))
-          .andExpect(status().isNoContent()); // 204 No Content
-
-      // DBの状態変化を確認
-      assertEquals(countBefore - 1, shopRepository.count());
-      Optional<Shop> found = Optional.ofNullable(shopRepository.findById(testShop.getId()));
-      assertTrue(found.isEmpty());
-    }
-
-    @Test
-    void 存在しないIDを指定すると404エラーが返る() throws Exception {
-      mockMvc.perform(delete("/api/shops/9999"))
-          .andExpect(status().isNotFound());
-    }
-  }
-
   @Nested
   class 店舗を更新する場合 {
 

@@ -34,7 +34,7 @@ public class ShopMapper {
   private final BaseMapper baseMapper;
   private final ShopRepository shopRepository;
 
-  private ReviewMapper reviewMapper;
+  private final ReviewMapper reviewMapper;
 
   //Shop情報（単体）とそれに紐づいたbaseとlocation情報を返すマッパー
   public ShopResponse toShopResponse(Shop shop) {
