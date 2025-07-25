@@ -7,7 +7,7 @@ public class ReviewSqlBuilder {
     SQL sql = new SQL() {{
       SELECT("r.*", 
             "s.url AS shop_url", "s.name as shop_name", "s.address as shop_address", "s.distance as shop_distance", "s.minutes as shop_minutes", 
-            "s.location_id AS shop_location_id", "l.lat AS shop_location_lat", "l.lon AS shop_location_lon", 
+            "s.location_id AS location_id", "l.lat AS location_lat", "l.lon AS location_lon", 
             "u.id AS user_id", "u.name AS user_name");
       FROM("reviews r");
       LEFT_OUTER_JOIN("shops s ON s.id = r.shop_id");

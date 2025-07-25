@@ -35,9 +35,9 @@ public interface ReviewRepository {
     @Result(column = "shop_address", property = "shop.address"),
     @Result(column = "shop_distance", property = "shop.distance"),
     @Result(column = "shop_minutes", property = "shop.minutes"),
-    @Result(column = "shop_location_id", property = "shop.location.id"),
-    @Result(column = "shop_location_lat", property = "shop.location.lat"),
-    @Result(column = "shop_location_lon", property = "shop.location.lon"),
+    @Result(column = "location_id", property = "shop.location.id"),
+    @Result(column = "location_lat", property = "shop.location.lat"),
+    @Result(column = "location_lon", property = "shop.location.lon"),
   })
   List<Review> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
 

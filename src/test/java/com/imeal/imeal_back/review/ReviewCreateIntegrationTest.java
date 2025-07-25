@@ -1,5 +1,6 @@
 package com.imeal.imeal_back.review;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import com.imeal.imeal_back.helper.request.UserCreateRequestFactory;
 import com.imeal.imeal_back.helper.testData.ShopTestDataFactory;
 import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
 import com.imeal.imeal_back.review.dto.ReviewCreateRequest;
+import com.imeal.imeal_back.review.repository.ReviewRepository;
 import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
 
@@ -52,8 +54,14 @@ public class ReviewCreateIntegrationTest {
   @Autowired
   private TestAuthHelper testAuthHelper;
 
+  @Autowired
+  private ReviewRepository reviewRepository;
+
   private ReviewCreateRequest request;
   private UserCreateRequest userCreateRequest;
+
+  private Integer beforeCount;
+  private Integer afterCount;
   
   @BeforeEach
   public void setUp() {
@@ -63,6 +71,7 @@ public class ReviewCreateIntegrationTest {
     Shop shop = shopTestDataFactory.createDefaultShop();
 
     request = reviewCreateRequestFactory.builder().withShopId(shop.getId()).build();
+    beforeCount = reviewRepository.count();
   }
 
   @Nested
@@ -70,13 +79,16 @@ public class ReviewCreateIntegrationTest {
     @Test
     public void 正しいリクエストだと作成できる() throws Exception {
       MockHttpSession session = testAuthHelper.performLoginAndGetSession(userCreateRequest.getEmail(), userCreateRequest.getPassword());
-      
+
       mockMvc.perform(post("/api/reviews").session(session)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request))
         .with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.comment").value(request.getComment()));
+
+      afterCount = reviewRepository.count();
+      assertEquals(beforeCount + 1, afterCount);
     }
   }
 
@@ -84,11 +96,15 @@ public class ReviewCreateIntegrationTest {
   public class review作成ができない場合{
     @Test
     public void ログインしていないと作成できない() throws Exception {
+
       mockMvc.perform(post("/api/reviews")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request))
         .with(csrf()))
         .andExpect(status().is3xxRedirection());
+
+      afterCount = reviewRepository.count();
+      assertEquals(beforeCount, afterCount);
     }
 
     @Test
@@ -102,6 +118,9 @@ public class ReviewCreateIntegrationTest {
         .with(csrf()))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.messages").exists());
+
+      afterCount = reviewRepository.count();
+      assertEquals(beforeCount, afterCount);
     }
   }
 }
