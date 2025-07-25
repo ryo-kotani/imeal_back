@@ -70,7 +70,13 @@ public class ReviewGetIntegrationTest {
 
   @Nested
   class リスト取得できない場合 {
-
+    @Test
+    public void 存在しない条件では取得できない() throws Exception {
+      Integer notExistBaseId = 999;
+      mockMvc.perform(get("/api/reviews?baseId=" + notExistBaseId))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.messages").exists());
+    }
   }
 
   @Nested

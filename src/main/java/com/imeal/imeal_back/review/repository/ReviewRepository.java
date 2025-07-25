@@ -1,6 +1,7 @@
 package com.imeal.imeal_back.review.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -17,6 +18,13 @@ import com.imeal.imeal_back.review.entity.Review;
 
 @Mapper
 public interface ReviewRepository {
+  /**
+   * baseId, sort, limitの条件をもとにreview, user, shop, shopに紐づくlocationを取得する
+   * @param baseId
+   * @param sort
+   * @param limit
+   * @return reviewのリスト（Optionalをつけることで存在しない場合はthrow必須になる）
+   */
   @SelectProvider(type = ReviewSqlBuilder.class, method = "buildSearchSql")
   @Results({
     @Result(column = "user_id", property = "user.id"),
@@ -31,7 +39,7 @@ public interface ReviewRepository {
     @Result(column = "shop_location_lat", property = "shop.location.lat"),
     @Result(column = "shop_location_lon", property = "shop.location.lon"),
   })
-  List<Review> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
+  Optional<List<Review>> findByX(@Param("baseId")Integer baseId, @Param("sort")String sort, @Param("limit")Integer limit);
 
   @Insert("insert into reviews (img_path, comment, amount, evaluation, shop_id, user_id) values (#{imgPath}, #{comment}, #{amount}, #{evaluation}, #{shop.id}, #{user.id})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
