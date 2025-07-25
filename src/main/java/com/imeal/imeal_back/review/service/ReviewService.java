@@ -39,8 +39,12 @@ public class ReviewService {
   }
 
   //レビュー情報(単体) + 店舗情報を取得
+  // @Transactionalを付与し、トランザクション処理にした
+  // orElseThrowでリソースが存在しない場合例外をスローするようにした
+  @Transactional(readOnly=true)
   public ReviewShopResponse getReview(Integer reviewId){
-    Review reviewWithShop = reviewRepository.findWithShopLocationById(reviewId);
+    Review reviewWithShop = reviewRepository.findWithShopLocationById(reviewId)
+        .orElseThrow(() -> new ResourceNotFoundException("次の条件を満たすリソースが存在しません: 口コミID: " + reviewId));
     return reviewMapper.toReviewShopResponse(reviewWithShop);
   }
 

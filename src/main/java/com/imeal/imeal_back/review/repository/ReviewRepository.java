@@ -87,6 +87,7 @@ public interface ReviewRepository {
   })
   Review findWithShopLocationUserById(Integer id);
 
+  // Optionalでラップし、存在確認を必須にした
   /**
    * shop,location情報を一緒に取得する
    * 
@@ -128,7 +129,7 @@ public interface ReviewRepository {
       @Result(column = "location_lat", property = "shop.location.lat"),
       @Result(column = "location_lon", property = "shop.location.lon"),
   })
-  Review findWithShopLocationById(Integer id);
+  Optional<Review> findWithShopLocationById(Integer id);
 
   /**
    * テスト用カウント機能
