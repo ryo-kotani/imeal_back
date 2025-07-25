@@ -17,8 +17,10 @@ import com.imeal.imeal_back.ImealBackApplication;
 import com.imeal.imeal_back.base.entity.Base;
 import com.imeal.imeal_back.helper.request.UserCreateRequestFactory;
 import com.imeal.imeal_back.helper.testData.BaseTestDataFactory;
+import com.imeal.imeal_back.helper.testData.ReviewTestDataFactory;
 import com.imeal.imeal_back.helper.testData.ShopTestDataFactory;
 import com.imeal.imeal_back.helper.testData.UserTestDataFactory;
+import com.imeal.imeal_back.review.entity.Review;
 import com.imeal.imeal_back.shop.entity.Shop;
 import com.imeal.imeal_back.user.dto.UserCreateRequest;
 
@@ -40,6 +42,8 @@ public class ShopGetIntegrationTest {
   private UserTestDataFactory userTestDataFactory;
   @Autowired
   private UserCreateRequestFactory userCreateRequestFactory;
+  @Autowired
+  private ReviewTestDataFactory reviewTestDataFactory;
 
   private Base base1;
   private Base base2;
@@ -47,6 +51,9 @@ public class ShopGetIntegrationTest {
   private Shop shop1WithBase1;
   private Shop shop2WithBase1;
   private Shop shopWithBase2;
+
+  private Review review1WithShop1;
+  private Review review2WithShop1;
 
   private String loginEmail;
   private String loginPassword;
@@ -67,6 +74,10 @@ public class ShopGetIntegrationTest {
     shop1WithBase1 = shopTestDataFactory.builder().withBase(base1).buildAndPersist();
     shop2WithBase1 = shopTestDataFactory.builder().withBase(base1).buildAndPersist();
     shopWithBase2 = shopTestDataFactory.builder().withBase(base2).buildAndPersist();
+
+    //review作成
+    review1WithShop1 = reviewTestDataFactory.builder().withShop(shop1WithBase1).buildAndPersist();
+    review2WithShop1 = reviewTestDataFactory.builder().withShop(shop1WithBase1).buildAndPersist();
   }
 
   @Nested
@@ -79,16 +90,24 @@ public class ShopGetIntegrationTest {
         .andExpect(jsonPath("$", hasSize(2)))
         .andExpect(jsonPath("$.[0].name").value(shop1WithBase1.getName()));
     }
+
+    @Test
+    public void shopIdを指定して店舗に紐づくレビュー一覧を取得できる() throws Exception {
+      mockMvc.perform(get("/api/shops/" + shop1WithBase1.getId() + "/reviews"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.reviews", hasSize(2)))
+          .andExpect(jsonPath("$.reviews.[0].review.id").value(review1WithShop1.getId()));
+    }
   }
 
   @Nested
   class 取得できない場合 {
     @Test
-    public void 存在しないbaseIdを指定すると空のリストが返る() throws Exception {
+    void 存在しないbaseIdを指定すると404エラーが返る() throws Exception {
       mockMvc.perform(get("/api/shops")
-        .param("baseId", "9999"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.shops", hasSize(0)));
+          .param("baseId", "9999")) // 存在しないID
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999")); // 結果は空配列
     }
   }
 }

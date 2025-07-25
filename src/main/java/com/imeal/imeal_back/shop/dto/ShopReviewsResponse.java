@@ -1,10 +1,8 @@
 package com.imeal.imeal_back.shop.dto;
 
-import java.util.List;
-
 import com.imeal.imeal_back.base.dto.BaseResponse;
 import com.imeal.imeal_back.location.dto.LocationResponse;
-import com.imeal.imeal_back.review.dto.ReviewResponse;
+import com.imeal.imeal_back.review.dto.ReviewsResponse;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +19,5 @@ public class ShopReviewsResponse {
   Integer minutes;
   BaseResponse base;
   LocationResponse location;
-  List<ReviewResponse> reviews;
+  ReviewsResponse reviews;
 }

@@ -18,7 +18,7 @@ public class ShopCreateRequest {
   @Length(max = 256, message = "{error.imgPath.length}", groups = ValidationGroups.Second.class)
   private String url;
   
-  @NotBlank(message = "{error.imgPath.notblank}", groups = ValidationGroups.First.class)
+  @NotBlank(message = "{error.name.notblank}", groups = ValidationGroups.First.class)
   @Length(max = 256, message = "{error.imgPath.length}", groups = ValidationGroups.Second.class)
   private String name;
   

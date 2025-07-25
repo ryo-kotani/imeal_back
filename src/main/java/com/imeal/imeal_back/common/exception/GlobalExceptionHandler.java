@@ -26,7 +26,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public Map<String, Object> handleAllUncaughtException(Exception exception) {
-    return Map.of("messages", List.of("Internal Server Error"));
+    //return Map.of("messages", List.of("Internal Server Error"));
+    return Map.of("messages", List.of(exception.getMessage())); //デバッグ用
   }
 
   //404エラー

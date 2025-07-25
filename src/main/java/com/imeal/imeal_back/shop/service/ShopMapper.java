@@ -13,9 +13,6 @@ import com.imeal.imeal_back.location.dto.LocationResponse;
 import com.imeal.imeal_back.location.entity.Location;
 import com.imeal.imeal_back.location.service.LocationMapper;
 import com.imeal.imeal_back.location.service.LocationService;
-import com.imeal.imeal_back.review.dto.ReviewResponse;
-import com.imeal.imeal_back.review.entity.Review;
-import com.imeal.imeal_back.review.service.ReviewMapper;
 import com.imeal.imeal_back.shop.dto.ShopCreateRequest;
 import com.imeal.imeal_back.shop.dto.ShopResponse;
 import com.imeal.imeal_back.shop.dto.ShopReviewsResponse;
@@ -34,7 +31,6 @@ public class ShopMapper {
   private final BaseMapper baseMapper;
   private final ShopRepository shopRepository;
 
-  private ReviewMapper reviewMapper;
 
   //Shop情報（単体）とそれに紐づいたbaseとlocation情報を返すマッパー
   public ShopResponse toShopResponse(Shop shop) {
@@ -61,7 +57,7 @@ public class ShopMapper {
     }
     return shopResponseList;
   }
-  //Shopとそれに紐づくレビュー情報のリストを返す
+  //レビュー情報は空のまま
   public ShopReviewsResponse toShopReviewsResponse(Shop shop) {
     ShopReviewsResponse response = new ShopReviewsResponse();
     BaseResponse base = baseMapper.toBaseResponse(shop.getBase()); //BaseMapperを呼び出してレスポンスに変換する
@@ -75,12 +71,6 @@ public class ShopMapper {
     response.setMinutes(shop.getMinutes());
     response.setBase(base);
     response.setLocation(location);
-
-    List<ReviewResponse> reviews = new ArrayList<>();
-    for(Review review : shop.getReviews()) {
-      reviews.add(reviewMapper.toReviewResponse(review));
-    }
-    response.setReviews(reviews);
 
     return response;
   }
