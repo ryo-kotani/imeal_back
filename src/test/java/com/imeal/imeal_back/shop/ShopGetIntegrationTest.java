@@ -115,7 +115,21 @@ public class ShopGetIntegrationTest {
       mockMvc.perform(get("/api/shops")
           .param("baseId", "9999")) // 存在しないID
           .andExpect(status().isNotFound())
-          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999")); // 結果は空配列
+          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999")); 
+    }
+
+    @Test
+    void 存在しないshopIdを指定すると404エラーが返る() throws Exception {
+      mockMvc.perform(get("/api/shops/9999")) //存在しないID
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999"));
+    }
+
+    @Test
+    void 存在しないshopIdを指定してレビュー情報を取得しようとすると404エラーが返る() throws Exception {
+      mockMvc.perform(get("/api/shops/9999/reviews")) //存在しないID
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.messages").value("Shop not found with id: 9999"));
     }
   }
 }
